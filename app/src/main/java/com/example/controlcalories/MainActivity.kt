@@ -3,9 +3,9 @@ package com.example.controlcalories
 
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,19 +15,19 @@ class MainActivity : AppCompatActivity() {
         val button1: Button = findViewById(R.id.button1)
         button1.setOnClickListener {
             button1.setBackgroundColor(Color.RED)
-            startActivity(Intent(this, SecondActivity::class.java))
+            startActivity(Intent(this, CalculationFormActivity::class.java).apply { this.putExtra("calculation", -300) })
         }
 
         val button2: Button = findViewById(R.id.button2)
         button2.setOnClickListener {
             button2.setBackgroundColor(Color.RED)
-            startActivity(Intent(this, ThirdActivity::class.java))
+            startActivity(Intent(this, CalculationFormActivity::class.java).apply { this.putExtra("calculation", 300) })
         }
 
         val button3: Button = findViewById(R.id.button3)
         button3.setOnClickListener {
             button3.setBackgroundColor(Color.RED)
-            startActivity(Intent(this, FourthActivity::class.java))
+            startActivity(Intent(this, CalculationFormActivity::class.java).apply { this.putExtra("calculation", 0) })
         }
     }
 }
