@@ -1,47 +1,40 @@
 package com.example.controlcalories.ui.screens
 
-import android.widget.Button
-import android.widget.TextView
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.controlcalories.R
+import com.example.controlcalories.StartScreen
 import com.example.controlcalories.ui.default_components.Button
-import com.example.controlcalories.ui.default_components.ButtonPreview
 import com.example.controlcalories.ui.theme.Typography
-import com.example.controlcalories.ui.theme.defaultCorrectColor
 import com.example.controlcalories.ui.theme.defaultIncorrectColor
-import com.example.controlcalories.ui.theme.defaultStartScreenColor
-import com.example.controlcalories.ui.theme.defaultTextColor
-import kotlin.math.round
+
 
 @Composable
 fun StartScreen(
-    modifier: Modifier = Modifier,
-    onNewUser: () -> Unit = {},
+    modifier: Modifier.Companion = Modifier,
+    navController: NavHostController,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -89,15 +82,15 @@ fun StartScreen(
                         .size(280.dp, 60.dp),
                     text = "Utrata masy ciała",
                     textStyle = Typography.labelLarge,
-                    onClick = onNewUser
+                    onClick = { navController.navigate("bmi") }
                 )
                 Button(
                     modifier = Modifier
                         .padding(top = 32.dp)
                         .size(280.dp, 60.dp),
-                    text = "Utrzymanie masy ciała",
+                    text = "Utrzymanie wagi",
                     textStyle = Typography.labelLarge,
-                    onClick = onNewUser
+                    onClick = { navController.navigate("bmi") }
                 )
                 Button(
                     modifier = Modifier
@@ -105,16 +98,22 @@ fun StartScreen(
                         .size(280.dp, 60.dp),
                     text = "Przyrost masy ciała",
                     textStyle = Typography.labelLarge,
-                    onClick = onNewUser
+                    onClick = { navController.navigate("bmi") }
                 )
             }
         }
     }
-
-
 }
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun StartScreenPreview() {
-    StartScreen()
+fun NavigationHost(navController: NavHostController) {
+    NavHost(navController, startDestination = "start") {
+        composable("start") {
+            StartScreen(navController)
+        }
+        composable("bmi") {
+            BmiScreen(navController = navController)
+        }
+    }
 }
+
+

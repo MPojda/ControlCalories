@@ -16,23 +16,31 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.controlcalories.R
+import com.example.controlcalories.data.model.dto.ProductDao
+import com.example.controlcalories.data.model.dto.populateDatabase
 import com.example.controlcalories.ui.default_components.AddButton
 import com.example.controlcalories.ui.default_components.EditButton
 import com.example.controlcalories.ui.default_components.WeekdayButton
 import com.example.controlcalories.ui.theme.defaultButtonColor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.InputStream
+
 
 @Composable
 fun AddButtonWithMeal(
@@ -75,11 +83,27 @@ fun AddMealWithEdit(
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainMenu(
+fun MainScreen(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
+    productDao: ProductDao,
+    inputStream: InputStream
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
+    DisposableEffect(Unit) {
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+            }
+        }
+        onDispose {  }
+    }
+
+
+
     var mealsCount by remember { mutableStateOf(3) } // Ilość posiłków do wyświetlenia
     Column(
         verticalArrangement = Arrangement.Center,
@@ -154,9 +178,3 @@ fun MainMenu(
     }
 }
 
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MainScreenPreview() {
-    MainMenu()
-}

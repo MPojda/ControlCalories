@@ -8,23 +8,23 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
-import kotlin.math.round
 import java.time.LocalDate
-import java.time.Period
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.controlcalories.data.model.domain.calculateAge
+import com.example.controlcalories.data.model.domain.calculateBMI
+import com.example.controlcalories.data.model.domain.getBMICategory
 import com.example.controlcalories.ui.theme.Typography
 import com.example.controlcalories.ui.theme.defaultButtonColor
 import com.example.controlcalories.ui.theme.defaultErrorColor
@@ -36,10 +36,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun BmiScreen(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     textColor: Color = Color.Black,
     selectedOption: String = "",
     enabledEditing: Boolean = true,
-    onValueChange: (String) -> Unit = {}
+    onValueChange: (String) -> Unit = {},
 ) {
     var gender by remember { mutableStateOf("") }
     var day by remember { mutableStateOf("") }
@@ -129,12 +130,12 @@ fun BmiScreen(
                     }
                 },
                 label = {
-                    Text(text = "Dzień")
+                    Text(text = "Dzień",)
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isDayValid) Color(0xFF4CAF50) else Color.Black,
-                    unfocusedBorderColor = if (isDayValid) Color(0xFF4CAF50) else Color.Black,
+                    unfocusedBorderColor = if (isDayValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
             )
@@ -156,7 +157,7 @@ fun BmiScreen(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isMonthValid) Color(0xFF4CAF50) else Color.Black,
-                    unfocusedBorderColor = if (isMonthValid) Color(0xFF4CAF50) else Color.Black,
+                    unfocusedBorderColor = if (isMonthValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
             )
@@ -178,7 +179,7 @@ fun BmiScreen(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isYearValid) Color(0xFF4CAF50) else Color.Black,
-                    unfocusedBorderColor = if (isYearValid) Color(0xFF4CAF50) else Color.Black,
+                    unfocusedBorderColor = if (isYearValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
             )
@@ -213,7 +214,7 @@ fun BmiScreen(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isHeightValid) Color(0xFF4CAF50) else Color.Black,
-                    unfocusedBorderColor = if (isHeightValid) Color(0xFF4CAF50) else Color.Black,
+                    unfocusedBorderColor = if (isHeightValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
             )
@@ -235,7 +236,7 @@ fun BmiScreen(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isWeightValid) Color(0xFF4CAF50) else Color.Black,
-                    unfocusedBorderColor = if (isWeightValid) Color(0xFF4CAF50) else Color.Black,
+                    unfocusedBorderColor = if (isWeightValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
             )
@@ -310,81 +311,22 @@ fun BmiScreen(
                     modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)
                 )
             }
-        }
-    }
-}
-
-fun calculateAge(dateOfBirth: LocalDate): Int {
-    val currentDate = LocalDate.now()
-    val age = Period.between(dateOfBirth, currentDate).years
-    return age
-}
-
-fun getBMICategory(bmi: Float, age: Int): String {
-    return when {
-        age < 18 -> {
-            when {
-                bmi < 15.0 -> "Wygłodzenie"
-                bmi in 15.0..15.9 -> "Wychudzenie"
-                bmi in 16.0..17.4 -> "Niedowaga"
-                bmi in 17.5..23.9 -> "Waga prawidłowa"
-                bmi in 24.0..28.9 -> "Nadwaga"
-                bmi in 29.0..33.9 -> "Otyłość 1 stopnia"
-                bmi in 34.0..38.9 -> "Otyłość 2 stopnia"
-                else -> "Otyłość 3 stopnia"
-            }
-        }
-        age >= 65 -> {
-            when {
-                bmi < 19.0 -> "Wygłodzenie"
-                bmi in 19.0..19.9 -> "Wychudzenie"
-                bmi in 20.0..21.4 -> "Niedowaga"
-                bmi in 21.5..27.9 -> "Waga prawidłowa"
-                bmi in 28.0..32.9 -> "Nadwaga"
-                bmi in 33.0..37.9 -> "Otyłość 1 stopnia"
-                bmi in 38.0..42.9 -> "Otyłość 2 stopnia"
-                else -> "Otyłość 3 stopnia"
-            }
-        }
-        else -> {
-            when {
-                bmi < 16.0 -> "Wygłodzenie"
-                bmi in 16.0..16.9 -> "Wychudzenie"
-                bmi in 17.0..18.4 -> "Niedowaga"
-                bmi in 18.5..24.9 -> "Waga prawidłowa"
-                bmi in 25.0..29.9 -> "Nadwaga"
-                bmi in 30.0..34.9 -> "Otyłość 1 stopnia"
-                bmi in 35.0..39.9 -> "Otyłość 2 stopnia"
-                else -> "Otyłość 3 stopnia"
+            Button(
+                onClick = {
+                    navController.navigate("menu")
+                },
+                enabled = bmiResult != null,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 24.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = defaultButtonColor),
+                shape = RoundedCornerShape(10.dp),
+                elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 10.dp)
+            ) {
+                Text(text = "Zaczynajmy!")
             }
         }
     }
 }
 
-fun calculateBMI(height: Int?, weight: Int?, age: Int?): Float {
-    if (height == null || weight == null || height <= 0 || weight <= 0) {
-        return -1f
-    }
 
-    val heightInMeters = height.toFloat() / 100
-    var bmi = weight.toFloat() / (heightInMeters * heightInMeters)
-
-    if (age != null) {
-        bmi += when {
-            age < 18 -> -1.0f
-            age >= 65 -> 3.0f
-            else -> 0.0f
-        }
-    }
-
-    return round(bmi * 10) / 10
-}
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun BmiScreenPreview() {
-    CompositionLocalProvider(LocalContentColor provides Color.Black) {
-        BmiScreen(selectedOption = "Kobieta")
-    }
-}

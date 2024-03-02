@@ -9,7 +9,7 @@ val defaultErrorColor = Color(0xFFFF0000)
 val defaultButtonColor = Color(0xFF476463)
 val defaultTextColor = Color(0xFF146168)
 
-val defaultStartScreenColor = Color(0xFFEBE4DC)
+val defaultStartScreenColor = Color(0xFF476463)
 val defaultHistoryTextColor = Color(0xFF10828D)
 val defaultHistoryCardColor = Color(0xFFE3ECED)
 

@@ -3,55 +3,53 @@ package com.example.controlcalories
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.controlcalories.data.model.dto.DatabaseProvider
+import com.example.controlcalories.data.model.dto.ProductDao
+import com.example.controlcalories.ui.screens.BmiScreen
+import com.example.controlcalories.ui.screens.MainScreen
 import com.example.controlcalories.ui.screens.StartScreen
 import com.example.controlcalories.ui.theme.ControlCaloriesTheme
-import com.example.controlcalories.ui.theme.defaultStartScreenColor
+import java.io.InputStream
 
 
 class MainActivity : ComponentActivity() {
-
-    private val mainVm by viewModels<MainViewModel>()
+    private lateinit var productDao: ProductDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DatabaseProvider.initialize(this)
+        productDao = DatabaseProvider.provideProductDao()
+
         setContent {
+            val navController = rememberNavController()
             ControlCaloriesTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                }
+                NavigationHost(navController = navController, inputStream = inputStream, productDao = productDao)
             }
         }
     }
 }
 
 @Composable
-fun MainApp(viewModel: MainViewModel) {
-    ControlCaloriesTheme {
-        val navController = rememberNavController()
-        NavigationHost(
-            vm = viewModel,
-            navHostController = navController
-        )
+fun NavigationHost(navController: NavHostController, inputStream: InputStream, productDao: ProductDao) {
+    NavHost(navController, startDestination = "start") {
+        composable("start") {
+            StartScreen(navController = navController)
+        }
+        composable("bmi") {
+            BmiScreen(navController = navController)
+        }
+        composable("menu") {
+            MainScreen(navController = navController, inputStream = inputStream, productDao = productDao)
+        }
     }
 }
 
 @Composable
-fun NavigationHost(vm: MainViewModel, navHostController: NavHostController) {
-
+fun StartScreen(navController: NavHostController) {
+    com.example.controlcalories.StartScreen(navController = navController)
 }

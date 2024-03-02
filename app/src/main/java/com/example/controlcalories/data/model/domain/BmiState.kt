@@ -8,6 +8,5 @@ sealed class BmiState {
 
     data class Filling(
         val currentData: UserData,
-        val currentBmi: Bmi,
     )
 }
