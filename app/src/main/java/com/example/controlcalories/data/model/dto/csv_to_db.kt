@@ -17,11 +17,11 @@ suspend fun populateDatabase(context: Context, inputStream: InputStream, product
                 id = tokens?.get(0) ?: "",
                 name = tokens?.get(1) ?: "",
                 calories = tokens?.get(2)?.toIntOrNull() ?: 0,
-                protein = tokens?.get(3)?.toDoubleOrNull() ?: 0.0,
-                fat = tokens?.get(4)?.toDoubleOrNull() ?: 0.0,
-                carbohydrates = tokens?.get(5)?.toDoubleOrNull() ?: 0.0,
-                sugar = tokens?.get(6)?.toDoubleOrNull() ?: 0.0,
-                fiber = tokens?.get(7)?.toDoubleOrNull() ?: 0.0
+                protein = tokens?.get(3)?.toIntOrNull() ?: 0,
+                fat = tokens?.get(4)?.toIntOrNull() ?: 0,
+                carbohydrates = tokens?.get(5)?.toIntOrNull() ?: 0,
+                sugar = tokens?.get(6)?.toIntOrNull() ?: 0,
+                fiber = tokens?.get(7)?.toIntOrNull() ?: 0
             )
             productDao.insertAll(listOf(product))
         }

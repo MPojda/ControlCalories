@@ -1,5 +1,6 @@
 package com.example.controlcalories.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -90,7 +91,6 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     productDao: ProductDao,
-    inputStream: InputStream
 ) {
     val coroutineScope = rememberCoroutineScope()
 

@@ -9,9 +9,9 @@ data class Product(
     @PrimaryKey val id: String,
     val name: String,
     val calories: Int,
-    val protein: Double,
-    val fat: Double,
-    val carbohydrates: Double,
-    val sugar: Double,
-    val fiber: Double
+    val protein: Int,
+    val fat: Int,
+    val carbohydrates: Int,
+    val sugar: Int,
+    val fiber: Int
 )

@@ -19,13 +19,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.controlcalories.R
-import com.example.controlcalories.StartScreen
 import com.example.controlcalories.ui.default_components.Button
 import com.example.controlcalories.ui.theme.Typography
 import com.example.controlcalories.ui.theme.defaultIncorrectColor

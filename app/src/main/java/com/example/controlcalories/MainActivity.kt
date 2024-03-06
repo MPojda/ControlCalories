@@ -14,8 +14,6 @@ import com.example.controlcalories.ui.screens.BmiScreen
 import com.example.controlcalories.ui.screens.MainScreen
 import com.example.controlcalories.ui.screens.StartScreen
 import com.example.controlcalories.ui.theme.ControlCaloriesTheme
-import java.io.InputStream
-
 
 class MainActivity : ComponentActivity() {
     private lateinit var productDao: ProductDao
@@ -28,14 +26,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             ControlCaloriesTheme {
-                NavigationHost(navController = navController, inputStream = inputStream, productDao = productDao)
+                NavigationHost(navController = navController, productDao = productDao)
             }
         }
     }
 }
 
 @Composable
-fun NavigationHost(navController: NavHostController, inputStream: InputStream, productDao: ProductDao) {
+fun NavigationHost(navController: NavHostController, productDao: ProductDao) {
     NavHost(navController, startDestination = "start") {
         composable("start") {
             StartScreen(navController = navController)
@@ -44,12 +42,7 @@ fun NavigationHost(navController: NavHostController, inputStream: InputStream, p
             BmiScreen(navController = navController)
         }
         composable("menu") {
-            MainScreen(navController = navController, inputStream = inputStream, productDao = productDao)
+            MainScreen(navController = navController, productDao = productDao)
         }
     }
-}
-
-@Composable
-fun StartScreen(navController: NavHostController) {
-    com.example.controlcalories.StartScreen(navController = navController)
 }
