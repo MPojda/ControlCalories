@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.controlcalories.R
 import com.example.controlcalories.data.model.dto.ProductDao
-import com.example.controlcalories.data.model.dto.populateDatabase
 import com.example.controlcalories.ui.default_components.AddButton
 import com.example.controlcalories.ui.default_components.EditButton
 import com.example.controlcalories.ui.default_components.WeekdayButton

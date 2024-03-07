@@ -101,16 +101,16 @@ fun StartScreen(
         }
     }
 }
-@Composable
-fun NavigationHost(navController: NavHostController) {
-    NavHost(navController, startDestination = "start") {
-        composable("start") {
-            StartScreen(navController)
-        }
-        composable("bmi") {
-            BmiScreen(navController = navController)
-        }
-    }
-}
+//@Composable
+//fun NavigationHost(navController: NavHostController) {
+//    NavHost(navController, startDestination = "start") {
+//        composable("start") {
+//            StartScreen(navController)
+//        }
+//        composable("bmi") {
+//            BmiScreen(navController = navController)
+//        }
+//    }
+//}
 
 

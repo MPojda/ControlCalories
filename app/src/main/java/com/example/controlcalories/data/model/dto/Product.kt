@@ -4,14 +4,14 @@ package com.example.controlcalories.data.model.dto
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "product_table")
 data class Product(
-    @PrimaryKey val id: String,
+    @PrimaryKey val uid: Int,
     val name: String,
     val calories: Int,
-    val protein: Int,
-    val fat: Int,
-    val carbohydrates: Int,
-    val sugar: Int,
-    val fiber: Int
+    val protein: Float,
+    val fat: Float,
+    val carbohydrates: Float,
+    val sugar: Float,
+    val fiber: Float
 )

@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.controlcalories.data.model.dto.DatabaseProvider
+
 import com.example.controlcalories.data.model.dto.ProductDao
 import com.example.controlcalories.ui.screens.BmiScreen
 import com.example.controlcalories.ui.screens.MainScreen
@@ -20,15 +20,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DatabaseProvider.initialize(this)
-        productDao = DatabaseProvider.provideProductDao()
 
-        setContent {
-            val navController = rememberNavController()
-            ControlCaloriesTheme {
-                NavigationHost(navController = navController, productDao = productDao)
-            }
-        }
+//        setContent {
+//            val navController = rememberNavController()
+//            ControlCaloriesTheme {
+//                NavigationHost(navController = navController, productDao = productDao)
+//            }
+//        }
+        Repository(context = applicationContext)
     }
 }
 

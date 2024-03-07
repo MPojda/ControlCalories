@@ -58,7 +58,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
 
 
-    val room_version = "2.5.1"
+    val room_version = "2.6.1"
     //noinspection GradleDependency
     implementation("androidx.room:room-runtime:$room_version")
     //noinspection GradleDependency
@@ -69,14 +69,12 @@ dependencies {
 
 
     val nav_version = "2.7.2"
+    //noinspection GradleDependency
     implementation("androidx.navigation:navigation-compose:$nav_version")
-    implementation("androidx.compose.material3:material3:1.2.0")
-    implementation("androidx.compose.material3:material3-window-size-class:1.2.0")
-    implementation("androidx.compose.material3:material3-adaptive:1.0.0-alpha06")
-    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.0.0-alpha03")
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
