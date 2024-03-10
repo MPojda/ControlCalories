@@ -1,6 +1,5 @@
 package com.example.controlcalories.data.model.dto
 
-
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

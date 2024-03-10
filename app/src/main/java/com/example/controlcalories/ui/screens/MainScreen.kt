@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,15 +34,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.controlcalories.R
+import com.example.controlcalories.data.model.dto.Product
 import com.example.controlcalories.data.model.dto.ProductDao
+import com.example.controlcalories.data.model.dto.ProductDatabase
 import com.example.controlcalories.ui.default_components.AddButton
 import com.example.controlcalories.ui.default_components.EditButton
 import com.example.controlcalories.ui.default_components.WeekdayButton
 import com.example.controlcalories.ui.theme.defaultButtonColor
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.InputStream
 
 
 @Composable
@@ -60,7 +66,7 @@ fun AddButtonWithMeal(
 @Composable
 fun AddMealWithEdit(
     mealNumber: Int,
-    onClickEdit: () -> Unit,
+    onClickEdit: () -> Unit, // Zmieniono typ parametru na () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -87,21 +93,25 @@ fun AddMealWithEdit(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier, // Dodaj domyślną wartość dla parametru modifier
     navController: NavHostController,
     productDao: ProductDao,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     DisposableEffect(Unit) {
-        coroutineScope.launch {
+        val job = coroutineScope.launch {
             withContext(Dispatchers.IO) {
+                // Tutaj wykonaj swoją operację w tle, np. pobieranie danych z bazy danych
+                val productList = productDao.getAllProducts()
+                // Możesz też zaktualizować stan Composable na podstawie wyników operacji w tle
+                // updateState(productList)
             }
         }
-        onDispose {  }
+        onDispose {
+            job.cancel() // Upewnij się, że anulujesz korutynę, aby uniknąć wycieków pamięci
+        }
     }
-
-
 
     var mealsCount by remember { mutableStateOf(3) } // Ilość posiłków do wyświetlenia
     Column(
@@ -165,15 +175,53 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.height(8.dp))
         repeat(mealsCount) { mealIndex ->
-            AddMealWithEdit(
-                mealNumber = mealIndex + 1,
-                onClickEdit = { /* Obsługa kliknięcia przycisku Edytuj */ }
-            )
-        }
+            LazyColumn {
+                items(mealsCount) { mealIndex ->
+                    AddMealWithEdit(
+                        mealNumber = mealIndex + 1,
+                        onClickEdit = {
+                            coroutineScope.launch {
+                                val products = productDao.getTenProducts()
+                                val productNames = products.joinToString(separator = "\n") { "${it.uid}: ${it.name}" }
+                                showMessage(context, productNames)
+                            }
+                        }
+                    )
+                }
+            }
         Spacer(modifier = Modifier.height(8.dp))
         AddButtonWithMeal(onClick = {
             mealsCount++
         })
     }
+}
+@Composable
+fun showMessage(context: Context, message: String) {
+    AlertDialog(
+        onDismissRequest = { },
+        title = { Text("10 produktów z bazy danych") },
+        text = { Text(message) },
+        confirmButton = {
+            Button(onClick = { /* dismiss dialog */ }) {
+                Text("OK")
+            }
+        }
+    )
+}
+
+suspend fun getProductDaoFromRepository(context: Context): ProductDao {
+    return withContext(Dispatchers.IO) {
+        // Inicjalizacja bazy danych
+        val database = ProductDatabase.getInstance(context)
+        // Pobranie Dao
+        database.productDao()
+    }
+}
+suspend fun ProductDao.getTenProducts(): List<Product> {
+    // Pobierz wszystkie produkty
+    val allProducts = getAllProducts().firstOrNull() ?: emptyList()
+
+    // Zwróć maksymalnie 10 produktów lub wszystkie, jeśli jest ich mniej niż 10
+    return allProducts.take(10)
 }
 

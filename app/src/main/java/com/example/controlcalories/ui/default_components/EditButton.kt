@@ -10,10 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.controlcalories.ui.theme.defaultButtonColor
+import kotlinx.coroutines.Job
 
 @Composable
 fun EditButton(
-    onClick: () -> Unit,
+    onClick: () -> Unit, // Zmieniono typ parametru na () -> Unit
     modifier: Modifier = Modifier,
     contentDescription: String = "Edit"
 ) {
@@ -21,7 +22,6 @@ fun EditButton(
         onClick = onClick,
         modifier = modifier.padding(end = 6.dp),
         colors = ButtonDefaults.buttonColors(defaultButtonColor)
-
     ) {
         Icon(
             imageVector = Icons.Default.Edit,

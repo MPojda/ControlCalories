@@ -30,7 +30,7 @@ import com.example.controlcalories.ui.theme.defaultIncorrectColor
 
 @Composable
 fun StartScreen(
-    modifier: Modifier.Companion = Modifier,
+    modifier: Modifier,
     navController: NavHostController,
 ) {
     Box(
@@ -101,16 +101,19 @@ fun StartScreen(
         }
     }
 }
-//@Composable
-//fun NavigationHost(navController: NavHostController) {
-//    NavHost(navController, startDestination = "start") {
-//        composable("start") {
-//            StartScreen(navController)
-//        }
-//        composable("bmi") {
-//            BmiScreen(navController = navController)
-//        }
-//    }
-//}
+@Composable
+fun NavigationHost(navController: NavHostController) {
+    NavHost(navController, startDestination = "start") {
+        composable("start") {
+            StartScreen(
+                modifier = Modifier, // Dodaj ten parametr z odpowiednią wartością modfikatora
+                navController = navController
+            )
+        }
+        composable("bmi") {
+            BmiScreen(navController = navController)
+        }
+    }
+}
 
 
