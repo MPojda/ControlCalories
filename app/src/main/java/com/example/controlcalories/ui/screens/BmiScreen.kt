@@ -3,6 +3,7 @@ package com.example.controlcalories.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -13,7 +14,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
-import java.time.LocalDate
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,40 +22,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.controlcalories.data.model.domain.calculateAge
-import com.example.controlcalories.data.model.domain.calculateBMI
-import com.example.controlcalories.data.model.domain.getBMICategory
+import com.example.controlcalories.MainViewModel
 import com.example.controlcalories.ui.theme.Typography
 import com.example.controlcalories.ui.theme.defaultButtonColor
 import com.example.controlcalories.ui.theme.defaultErrorColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.getValue
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BmiScreen(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    textColor: Color = Color.Black,
-    selectedOption: String = "",
-    enabledEditing: Boolean = true,
-    onValueChange: (String) -> Unit = {},
+    viewModel: MainViewModel, navController: NavHostController
 ) {
-    var gender by remember { mutableStateOf("") }
-    var day by remember { mutableStateOf("") }
-    var month by remember { mutableStateOf("") }
-    var year by remember { mutableStateOf("") }
-    var height by remember { mutableStateOf("") }
-    var weight by remember { mutableStateOf("") }
-    var bmiResult by remember { mutableStateOf<Float?>(null) }
-    var age by remember { mutableStateOf(0) }
-    var isDayValid by remember { mutableStateOf(day.toIntOrNull() in 1..31) }
-    var isMonthValid by remember { mutableStateOf(month.toIntOrNull() in 0..12) }
-    var isYearValid by remember { mutableStateOf(year.toIntOrNull() in 1900..2023) }
-    var isHeightValid by remember { mutableStateOf(height.toIntOrNull() in 0..999) }
-    var isWeightValid by remember { mutableStateOf(weight.toIntOrNull() in 0..999) }
-    var showErrorAlert by remember { mutableStateOf(false) }
+    val gender by viewModel.gender.collectAsState()
+    val dayOfBirth by viewModel.dayOfBirth.collectAsState()
+    val monthOfBirth by viewModel.monthOfBirth.collectAsState()
+    val yearOfBirth by viewModel.yearOfBirth.collectAsState()
+    val height by viewModel.height.collectAsState()
+    val weight by viewModel.weight.collectAsState()
+    val showErrorAlert by viewModel.showErrorAlert.collectAsState()
+
+    val isDayValid by viewModel.isDayValid.collectAsState()
+    val isMonthValid by viewModel.isMonthValid.collectAsState()
+    val isYearValid by viewModel.isYearValid.collectAsState()
+    val isWeightValid by viewModel.isWeightValid.collectAsState()
+    val isHeightValid by viewModel.isHeightValid.collectAsState()
+    val showResultDialog by viewModel.showResultDialog.collectAsState()
+
+    val coroutineScope = rememberCoroutineScope()
+
 
     Column(
         modifier = Modifier
@@ -63,50 +60,38 @@ fun BmiScreen(
             .padding(horizontal = 10.dp, vertical = 10.dp)
     ) {
 
-        Text("Płeć:",
-            style = Typography.labelLarge,
-            modifier = Modifier.padding(start = 10.dp)
+        Text(
+            "Płeć:", style = Typography.labelLarge, modifier = Modifier.padding(start = 10.dp)
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = 10.dp)
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(10.dp)) {
             Checkbox(
                 checked = gender == "Kobieta",
                 onCheckedChange = {
-                    gender = if (it) "Kobieta" else ""
+                    if (it) viewModel.updateGender("Kobieta")
                 },
-                colors = CheckboxDefaults.colors(
-                    checkmarkColor = Color.White,
-                    checkedColor = Color.Black,
-                    uncheckedColor = Color.Black
-                ),
+                colors = CheckboxDefaults.colors(checkmarkColor = Color.White),
                 modifier = Modifier.padding(end = 16.dp)
-
-
             )
-            Text(text = "Kobieta", style = Typography.labelLarge)
+            Text("Kobieta", style = Typography.labelLarge)
 
             Checkbox(
                 checked = gender == "Mężczyzna",
                 onCheckedChange = {
-                    gender = if (it) "Mężczyzna" else ""
+                    if (it) viewModel.updateGender("Mężczyzna")
+                    else viewModel.updateGender("")
                 },
-                colors = CheckboxDefaults.colors(
-                    checkmarkColor = Color.White,
-                    checkedColor = Color.Black,
-                    uncheckedColor = Color.Black
-                ),
+                colors = CheckboxDefaults.colors(checkmarkColor = Color.White),
                 modifier = Modifier.padding(start = 16.dp)
             )
-            Text(text = "Mężczyzna", style = Typography.labelLarge)
+            Text("Mężczyzna", style = Typography.labelLarge)
         }
 
         Spacer(modifier = Modifier.height(18.dp))
-        Text("Data urodzenia:",
+        Text(
+            "Data urodzenia:",
             style = Typography.labelLarge,
             modifier = Modifier.padding(start = 10.dp),
         )
@@ -122,19 +107,15 @@ fun BmiScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 8.dp),
-                value = day,
+                value = dayOfBirth,
                 onValueChange = { newText ->
-                    if (newText.length <= 2) {
-                        day = newText
-                        isDayValid = newText.toIntOrNull() in 1..31
-                    }
+                    viewModel.updateDayOfBirth(newText)
                 },
-                label = {
-                    Text(text = "Dzień",)
-                },
+                isError = !isDayValid,
+                label = { Text("Dzień") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = if (isDayValid) Color(0xFF4CAF50) else Color.Black,
+                    focusedBorderColor = if (isDayValid) Color(0xFF4CAF50) else Color.Red,
                     unfocusedBorderColor = if (isDayValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
@@ -144,19 +125,15 @@ fun BmiScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 8.dp),
-                value = month,
+                value = monthOfBirth,
                 onValueChange = { newText ->
-                    if (newText.length <= 2) {
-                        month = newText
-                        isMonthValid = newText.toIntOrNull() in 1..12
-                    }
+                    viewModel.updateMonthOfBirth(newText)
                 },
-                label = {
-                    Text(text = "Miesiąc")
-                },
+                isError = !isMonthValid,
+                label = { Text("Miesiąc") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = if (isMonthValid) Color(0xFF4CAF50) else Color.Black,
+                    focusedBorderColor = if (isMonthValid) Color(0xFF4CAF50) else Color.Red,
                     unfocusedBorderColor = if (isMonthValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
@@ -166,26 +143,23 @@ fun BmiScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 8.dp),
-                value = year,
+                value = yearOfBirth,
                 onValueChange = { newText ->
-                    if (newText.length <= 4) {
-                        year = newText
-                        isYearValid = newText.toIntOrNull() in 1900..2023
-                    }
+                    viewModel.updateYearOfBirth(newText)
                 },
-                label = {
-                    Text(text = "Rok")
-                },
+                isError = !isYearValid,
+                label = { Text("Rok") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = if (isYearValid) Color(0xFF4CAF50) else Color.Black,
+                    focusedBorderColor = if (isYearValid) Color(0xFF4CAF50) else Color.Red,
                     unfocusedBorderColor = if (isYearValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
             )
         }
         Spacer(modifier = Modifier.height(18.dp))
-        Text("Dane do obliczenia BMI:",
+        Text(
+            "Dane do obliczenia BMI:",
             style = Typography.labelLarge,
             modifier = Modifier.padding(start = 10.dp),
         )
@@ -203,17 +177,13 @@ fun BmiScreen(
                     .padding(horizontal = 8.dp),
                 value = height,
                 onValueChange = { newText ->
-                    if (newText.length <= 3) {
-                        height = newText
-                        isHeightValid = newText.toIntOrNull() in 80..300
-                    }
+                    viewModel.updateHeight(newText)
                 },
-                label = {
-                    Text(text = "Wzrost w cm")
-                },
+                isError = !isHeightValid,
+                label = { Text("Wzrost w cm") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = if (isHeightValid) Color(0xFF4CAF50) else Color.Black,
+                    focusedBorderColor = if (isHeightValid) Color(0xFF4CAF50) else Color.Red,
                     unfocusedBorderColor = if (isHeightValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
@@ -225,17 +195,13 @@ fun BmiScreen(
                     .padding(horizontal = 8.dp),
                 value = weight,
                 onValueChange = { newText ->
-                    if (newText.length <= 3) {
-                        weight = newText
-                        isWeightValid = newText.toIntOrNull() in 1..400
-                    }
+                    viewModel.updateWeight(newText)
                 },
-                label = {
-                    Text(text = "Waga w kg")
-                },
+                isError = !isWeightValid,
+                label = { Text("Waga w kg") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = if (isWeightValid) Color(0xFF4CAF50) else Color.Black,
+                    focusedBorderColor = if (isWeightValid) Color(0xFF4CAF50) else Color.Red,
                     unfocusedBorderColor = if (isWeightValid) Color(0xFF4CAF50) else Color.Red,
                     cursorColor = Color.Black
                 )
@@ -243,8 +209,6 @@ fun BmiScreen(
         }
 
         Spacer(modifier = Modifier.height(18.dp))
-
-        val coroutineScope = rememberCoroutineScope()
 
         Column(
             modifier = Modifier
@@ -254,25 +218,18 @@ fun BmiScreen(
 
             Button(
                 onClick = {
-                    val isValidInput = !(day.isEmpty() || month.isEmpty() || year.isEmpty() || height.isEmpty() || weight.isEmpty() ||
-                            !isDayValid || !isMonthValid || !isYearValid || !isHeightValid || !isWeightValid)
-
-                    if (isValidInput) {
-                        val dateOfBirth = LocalDate.of(year.toInt(), month.toInt(), day.toInt())
-                        age = calculateAge(dateOfBirth)
-                        bmiResult = calculateBMI(height.toIntOrNull(), weight.toIntOrNull(), age)
-                    } else {
-                        showErrorAlert = true
+                    viewModel.calculateAndSaveBMI()
+                    if (showErrorAlert) {
                         coroutineScope.launch {
-                            delay(3000)
-                            showErrorAlert = false
+                            delay(3000)  // Czas po jakim alert o błędzie zniknie
+                            viewModel.showErrorAlert.value = false
                         }
                     }
                 },
                 enabled = true,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 8.dp), // Dodajemy odstęp na dole, aby alert nie zakrywał wyników BMI
+                    .padding(bottom = 8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = if (showErrorAlert) defaultErrorColor else defaultButtonColor),
                 shape = RoundedCornerShape(10.dp),
                 elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 10.dp)
@@ -280,53 +237,41 @@ fun BmiScreen(
                 Text(text = "Oblicz BMI")
             }
 
-            if (showErrorAlert) {
-                Surface(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    color = defaultButtonColor,
-                    shape = RoundedCornerShape(10.dp),
-
-                ) {
-                    Text(
-                        text = "Wypełnij wszystkie pola !",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-
-            bmiResult?.let { bmi ->
-                Text(
-                    text = "BMI: $bmi",
-                    modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)
+            if (showResultDialog) {
+                AlertDialog(
+                    onDismissRequest = {
+                        // Ignoruj zamknięcie dialogu przez kliknięcie poza obszarem dialogu lub przyciskiem wstecz
+                    },
+                    title = { Text("Wynik BMI") },
+                    text = {
+                        Column {
+                            viewModel.bmiResult.value?.let { bmi ->
+                                Text(
+                                    "Twoje BMI to ${"%.2f".format(bmi)}",
+                                    style = Typography.labelMedium
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                            viewModel.bmiCategory.value?.let { category ->
+                                Text(
+                                    "Kategoria: $category",
+                                    style = Typography.labelMedium
+                                )
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                viewModel.showResultDialog.value = false
+                                navController.navigate("menu") // Przenieś do głównego menu po kliknięciu OK
+                            }
+                        ) {
+                            Text("OK")
+                        }
+                    }
                 )
-                val bmiCategory = getBMICategory(bmi, age)
-                Text(
-                    text = "Interpretacja wyniku: $bmiCategory",
-                    modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)
-                )
-            }
-            Button(
-                onClick = {
-                    navController.navigate("menu")
-                },
-                enabled = bmiResult != null,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 24.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = defaultButtonColor),
-                shape = RoundedCornerShape(10.dp),
-                elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 10.dp)
-            ) {
-                Text(text = "Zaczynajmy!")
             }
         }
     }
 }
-
-

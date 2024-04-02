@@ -19,9 +19,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.controlcalories.MainViewModel
 import com.example.controlcalories.R
 import com.example.controlcalories.ui.default_components.Button
 import com.example.controlcalories.ui.theme.Typography
@@ -32,6 +34,8 @@ import com.example.controlcalories.ui.theme.defaultIncorrectColor
 fun StartScreen(
     modifier: Modifier,
     navController: NavHostController,
+    onContinueClicked: () -> Unit
+
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -101,19 +105,6 @@ fun StartScreen(
         }
     }
 }
-@Composable
-fun NavigationHost(navController: NavHostController) {
-    NavHost(navController, startDestination = "start") {
-        composable("start") {
-            StartScreen(
-                modifier = Modifier, // Dodaj ten parametr z odpowiednią wartością modfikatora
-                navController = navController
-            )
-        }
-        composable("bmi") {
-            BmiScreen(navController = navController)
-        }
-    }
-}
+
 
 

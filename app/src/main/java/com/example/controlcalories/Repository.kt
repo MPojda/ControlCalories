@@ -3,11 +3,13 @@ package com.example.controlcalories
 import android.content.Context
 import android.util.Log
 import androidx.room.Room
+import com.example.controlcalories.data.model.dto.Product
 import com.example.controlcalories.data.model.dto.ProductDao
 import com.example.controlcalories.data.model.dto.ProductDatabase
 import com.example.controlcalories.data.model.dto.ProductLoader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
@@ -25,6 +27,10 @@ class Repository(context: Context) {
         .build()
 
     private val productDao = database.productDao()
+
+    fun getProductById(productId: Int): Flow<Product?> {
+        return productDao.getProductById(productId)
+    }
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
