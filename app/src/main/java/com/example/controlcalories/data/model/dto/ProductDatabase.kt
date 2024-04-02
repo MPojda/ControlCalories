@@ -23,7 +23,7 @@ abstract class ProductDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 context.applicationContext,
                 ProductDatabase::class.java,
-                "app_database"
+                "product_database"
             )
                 .build().also { INSTANCE = it }
         }

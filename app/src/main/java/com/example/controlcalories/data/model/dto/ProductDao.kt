@@ -16,7 +16,7 @@ interface ProductDao {
     fun getAllProducts(): Flow<List<Product>>
 
     @Query("SELECT * FROM product_table WHERE uid = :productId")
-    fun getProductById(productId: Int): Product?
+    fun getProductById(productId: Int): Flow<Product?>
 
     @Delete
     suspend fun deleteProduct(product: Product)
