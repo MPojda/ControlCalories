@@ -2,6 +2,7 @@ package com.example.controlcalories
 
 import android.app.Application
 import android.content.Context
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.controlcalories.data.model.domain.calculateAge
@@ -10,6 +11,7 @@ import com.example.controlcalories.data.model.domain.getBMICategory
 import com.example.controlcalories.data.model.dto.Product
 import com.example.controlcalories.data.model.dto.ProductCategory
 import com.example.controlcalories.data.model.dto.ProductDatabase
+import com.example.controlcalories.data.model.dto.UserProductDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -17,7 +19,10 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
-    private val productDao = ProductDatabase.getInstance(app.applicationContext).productDao()
+    private val database: ProductDatabase = ProductDatabase.getInstance(app.applicationContext)
+    private val productDao = database.productDao()
+    private val userProductDao = database.userProductDao()
+
 
     private val sharedPreferences = app.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
@@ -29,6 +34,20 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _expandedMeals = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
     val expandedMeals: StateFlow<Map<Int, Boolean>> = _expandedMeals
+
+    private val _meals = MutableStateFlow<List<String>>(listOf("Posiłek 1"))
+    val meals: StateFlow<List<String>> = _meals
+
+    private val _expandedCategories = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
+    val expandedCategories: StateFlow<Map<Int, Boolean>> = _expandedCategories
+
+    val showDialog = mutableStateOf(false)
+    val showCategoryDialog = mutableStateOf(false)
+    val showProductDialog = mutableStateOf(false)
+    val showQuantityDialog = mutableStateOf(false)
+    val selectedCategory = mutableStateOf<ProductCategory?>(null)
+    val selectedProduct = mutableStateOf<Product?>(null)
+    val productQuantity = mutableStateOf("")
 
     var showErrorAlert = MutableStateFlow(false)
     var gender = MutableStateFlow("")
@@ -46,6 +65,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     var isWeightValid = MutableStateFlow(true)
     var isHeightValid = MutableStateFlow(true)
     var showResultDialog = MutableStateFlow(false)
+
 
     init {
         loadProducts()
@@ -79,10 +99,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             ProductCategory(14, "Dania gotowe", 480, 654)
         )
     }
-
-    private val _meals = MutableStateFlow<List<String>>(listOf("Posiłek 1"))
-    val meals: StateFlow<List<String>> = _meals
-
 
     fun addMeal() {
         val nextMealNumber = _meals.value.size + 1
@@ -201,6 +217,40 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             apply()
         }
     }
+    fun toggleShowDialog(show: Boolean) {
+        showDialog.value = show
+    }
+    fun toggleCategoryDialog(show: Boolean) {
+        showCategoryDialog.value = show
+    }
+
+    fun toggleProductDialog(show: Boolean) {
+        showProductDialog.value = show
+        if (!show) {
+            // Resetuj wybrany produkt i ilość, gdy dialog się zamyka
+            selectedProduct.value = null
+            productQuantity.value = ""
+        }
+    }
+
+    fun toggleQuantityDialog(show: Boolean) {
+        showQuantityDialog.value = show
+    }
+
+    fun addProductToMeal() {
+        selectedProduct.value = null
+        productQuantity.value = ""
+    }
+    fun toggleCategoryExpansion(categoryId: Int) {
+        val currentState = _expandedCategories.value[categoryId] ?: false
+        _expandedCategories.value = _expandedCategories.value.toMutableMap().apply {
+            this[categoryId] = !currentState
+        }
+    }
+    fun addProductToMeal(productId: Int, quantity: String) {
+
+    }
+
 }
 
 

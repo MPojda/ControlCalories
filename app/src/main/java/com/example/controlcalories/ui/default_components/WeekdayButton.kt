@@ -22,6 +22,7 @@ import com.example.controlcalories.ui.theme.defaultColor
 import com.example.controlcalories.ui.theme.defaultCorrectColor
 import com.example.controlcalories.ui.theme.defaultHistoryCardColor
 import com.example.controlcalories.ui.theme.defaultHistoryTextColor
+import com.example.controlcalories.ui.theme.defaultIncorrectColor
 import java.util.*
 
 @Composable
@@ -39,7 +40,7 @@ fun WeekdayButton(
             .height(50.dp),
 
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isToday) defaultHistoryTextColor else defaultButtonColor
+            containerColor = if (isToday) defaultIncorrectColor else defaultButtonColor
         ),
         contentPadding = PaddingValues(0.dp)
     ) {
@@ -47,10 +48,12 @@ fun WeekdayButton(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = text,
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+            Text(
+                text = text,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.White
             )
         }
     }

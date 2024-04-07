@@ -7,16 +7,19 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Product::class], version = 1)
+@Database(entities = [Product::class, UserProduct::class], version = 1)
 abstract class ProductDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
+    abstract fun userProductDao(): UserProductDao // Dodaj to
 
     companion object {
         @Volatile
         private var INSTANCE: ProductDatabase? = null
 
         fun getInstance(context: Context): ProductDatabase {
-            return INSTANCE ?: createDatabase(context)
+            synchronized(this) {
+                return INSTANCE ?: createDatabase(context).also { INSTANCE = it }
+            }
         }
 
         private fun createDatabase(context: Context): ProductDatabase {
@@ -25,7 +28,8 @@ abstract class ProductDatabase : RoomDatabase() {
                 ProductDatabase::class.java,
                 "product_database"
             )
-                .build().also { INSTANCE = it }
+                .fallbackToDestructiveMigration() // Dodaj to, jeśli chcesz uniknąć błędów migracji przy zmianie schematu
+                .build()
         }
     }
 }
