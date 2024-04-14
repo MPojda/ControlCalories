@@ -7,10 +7,10 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Product::class, UserProduct::class], version = 1)
+@Database(entities = [Product::class, UserProduct::class], version = 3)
 abstract class ProductDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
-    abstract fun userProductDao(): UserProductDao // Dodaj to
+    abstract fun userProductDao(): UserProductDao
 
     companion object {
         @Volatile
@@ -28,7 +28,7 @@ abstract class ProductDatabase : RoomDatabase() {
                 ProductDatabase::class.java,
                 "product_database"
             )
-                .fallbackToDestructiveMigration() // Dodaj to, jeśli chcesz uniknąć błędów migracji przy zmianie schematu
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

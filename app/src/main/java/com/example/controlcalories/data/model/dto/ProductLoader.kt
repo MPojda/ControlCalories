@@ -15,7 +15,7 @@ class ProductLoader(private val context: Context) {
                 lines.forEachIndexed { index, line ->
                     if (index > 0) {
                         val tokens = line.split(";")
-                        if (tokens.size >= 8) {
+                        if (tokens.size >= 9) {
                             val product = Product(
                                 uid = tokens[0].toInt(),
                                 name = tokens[1],
@@ -24,7 +24,8 @@ class ProductLoader(private val context: Context) {
                                 fat = tokens[4].replace(',', '.').toFloatOrNull() ?: 0f,
                                 carbohydrates = tokens[5].replace(',', '.').toFloatOrNull() ?: 0f,
                                 sugar = tokens[6].replace(',', '.').toFloatOrNull() ?: 0f,
-                                fiber = tokens[7].replace(',', '.').toFloatOrNull() ?: 0f
+                                fiber = tokens[7].replace(',', '.').toFloatOrNull() ?: 0f,
+                                categoryId = tokens[8].toInt()
                             )
                             productList.add(product)
                         }

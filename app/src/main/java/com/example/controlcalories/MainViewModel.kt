@@ -2,6 +2,7 @@ package com.example.controlcalories
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,9 +12,10 @@ import com.example.controlcalories.data.model.domain.getBMICategory
 import com.example.controlcalories.data.model.dto.Product
 import com.example.controlcalories.data.model.dto.ProductCategory
 import com.example.controlcalories.data.model.dto.ProductDatabase
-import com.example.controlcalories.data.model.dto.UserProductDao
+import com.example.controlcalories.data.model.dto.UserProduct
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -26,11 +28,19 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private val sharedPreferences = app.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
-    private val _categories = MutableStateFlow<List<ProductCategory>>(emptyList())
-    val categories: StateFlow<List<ProductCategory>> = _categories
+    var categories = MutableStateFlow<List<ProductCategory>>(emptyList())
+
+    private val _selectedCategoryId = MutableStateFlow<Int?>(null)
+    val selectedCategoryId = _selectedCategoryId.asStateFlow()
+
+    val showCategoryDialog = MutableStateFlow(false)
 
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products
+
+    private val _selectedProduct = MutableStateFlow<Product?>(null)
+    val selectedProduct: StateFlow<Product?> = _selectedProduct.asStateFlow()
+
 
     private val _expandedMeals = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
     val expandedMeals: StateFlow<Map<Int, Boolean>> = _expandedMeals
@@ -38,16 +48,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _meals = MutableStateFlow<List<String>>(listOf("Posiłek 1"))
     val meals: StateFlow<List<String>> = _meals
 
-    private val _expandedCategories = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
-    val expandedCategories: StateFlow<Map<Int, Boolean>> = _expandedCategories
+    private val _expandedCategoryId = MutableStateFlow<Int?>(null)
+    val expandedCategoryId: StateFlow<Int?> = _expandedCategoryId
 
-    val showDialog = mutableStateOf(false)
-    val showCategoryDialog = mutableStateOf(false)
-    val showProductDialog = mutableStateOf(false)
-    val showQuantityDialog = mutableStateOf(false)
-    val selectedCategory = mutableStateOf<ProductCategory?>(null)
-    val selectedProduct = mutableStateOf<Product?>(null)
-    val productQuantity = mutableStateOf("")
+    val showDialog = MutableStateFlow(false)
+    val showProductDialog = MutableStateFlow(false)
+    val showQuantityDialog = MutableStateFlow(false)
+    val selectedCategory = MutableStateFlow<ProductCategory?>(null)
+    val productQuantity = MutableStateFlow("")
 
     var showErrorAlert = MutableStateFlow(false)
     var gender = MutableStateFlow("")
@@ -82,7 +90,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun loadCategories() {
-        _categories.value = listOf(
+        categories.value = listOf(
             ProductCategory(1, "Nabiał", 1, 56),
             ProductCategory(2, "Jaja", 57, 61),
             ProductCategory(3, "Mięso", 62, 102),
@@ -218,39 +226,64 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
     fun toggleShowDialog(show: Boolean) {
+        Log.d("ViewModel", "toggleShowDialog: $show")
         showDialog.value = show
     }
+
     fun toggleCategoryDialog(show: Boolean) {
         showCategoryDialog.value = show
     }
 
-    fun toggleProductDialog(show: Boolean) {
-        showProductDialog.value = show
-        if (!show) {
-            // Resetuj wybrany produkt i ilość, gdy dialog się zamyka
-            selectedProduct.value = null
-            productQuantity.value = ""
-        }
-    }
 
-    fun toggleQuantityDialog(show: Boolean) {
-        showQuantityDialog.value = show
-    }
-
-    fun addProductToMeal() {
-        selectedProduct.value = null
-        productQuantity.value = ""
-    }
     fun toggleCategoryExpansion(categoryId: Int) {
-        val currentState = _expandedCategories.value[categoryId] ?: false
-        _expandedCategories.value = _expandedCategories.value.toMutableMap().apply {
-            this[categoryId] = !currentState
+        if (_expandedCategoryId.value == categoryId) {
+            _expandedCategoryId.value = null  // Zwinięcie kategorii
+        } else {
+            _expandedCategoryId.value = categoryId  // Rozwinięcie nowej kategorii
         }
     }
     fun addProductToMeal(productId: Int, quantity: String) {
 
     }
+    fun addUserProduct(weight: Float, categoryId: Int) {
+        val product = _selectedProduct.value
+        if (product != null && weight > 0) {
+            val userProduct = UserProduct(
+                id = 0,
+                name = product.name,
+                calories = (product.calories * weight / 100).toInt(),
+                protein = product.protein * weight / 100,
+                fat = product.fat * weight / 100,
+                carbohydrates = product.carbohydrates * weight / 100,
+                sugar = product.sugar * weight / 100,
+                fiber = product.fiber * weight / 100,
+                addedDate = System.currentTimeMillis(),
+                weight = weight,
+                categoryId = categoryId
+            )
+
+            viewModelScope.launch {
+                userProductDao.insert(userProduct)
+            }
+            // Reset selected product after adding to meal
+            _selectedProduct.value = null
+        }
+    }
+
+    fun toggleCategory(categoryId: Int?) {
+        _expandedCategoryId.value = if (_expandedCategoryId.value == categoryId) null else categoryId
+    }
+    fun selectCategory(categoryId: Int) {
+        _selectedCategoryId.value = categoryId
+    }
+    fun selectProduct(product: Product) {
+        _selectedProduct.value = product
+    }
+    fun toggleQuantityDialog(show: Boolean) {
+        showQuantityDialog.value = show
+    }
 
 }
+
 
 

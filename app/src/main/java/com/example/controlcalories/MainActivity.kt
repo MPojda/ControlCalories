@@ -12,8 +12,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.controlcalories.data.model.dto.ProductDao
 import com.example.controlcalories.data.model.dto.ProductDatabase
+import com.example.controlcalories.ui.screens.CategoriesScreen
 import com.example.controlcalories.ui.screens.BmiScreen
 import com.example.controlcalories.ui.screens.MainScreen
+import com.example.controlcalories.ui.screens.ProductListScreen
+import com.example.controlcalories.ui.screens.QuantityInputScreen
 import com.example.controlcalories.ui.screens.StartScreen
 import com.example.controlcalories.ui.theme.ControlCaloriesTheme
 
@@ -57,10 +60,26 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel) {
 
         composable("bmi") {
             BmiScreen(viewModel = viewModel, navController = navController)
-
         }
+
         composable("mainMenu") {
             MainScreen(viewModel = viewModel, navController = navController)
+        }
+
+        // Dodanie trasy dla ekranu dodawania produktu
+        composable("categories") {
+            CategoriesScreen(viewModel = viewModel, navController = navController)
+        }
+
+        // Dodanie trasy dla listy produktów z daną kategorią
+        composable("productList/{categoryId}") { backStackEntry ->
+            val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull() ?: 0
+            ProductListScreen(categoryId = categoryId, viewModel = viewModel, navController = navController)
+        }
+
+        // Dodanie trasy dla ekranu wprowadzania wagi produktu
+        composable("quantityInput") {
+            QuantityInputScreen(viewModel = viewModel, navController = navController)
         }
     }
 }

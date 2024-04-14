@@ -14,21 +14,29 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.buttonColors
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItemDefaults.contentColor
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -43,6 +51,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -52,8 +62,8 @@ import com.example.controlcalories.R
 import com.example.controlcalories.data.model.dto.Product
 import com.example.controlcalories.data.model.dto.ProductCategory
 import com.example.controlcalories.ui.default_components.WeekdayButton
+import com.example.controlcalories.ui.theme.Typography
 import com.example.controlcalories.ui.theme.defaultButtonColor
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,8 +73,6 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    val categories by viewModel.categories.collectAsState()
-    val showCategories = remember { mutableStateOf(false) }
     val meals by viewModel.meals.collectAsState()
     val expandedMeals by viewModel.expandedMeals.collectAsState(initial = mapOf<Int, Boolean>())
 
@@ -152,210 +160,204 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        LazyColumn {
-            itemsIndexed(meals) { index, meal ->
-                MealItem(meal, index, viewModel, expandedMeals.getOrDefault(index, false))
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+        Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
+            CategoryButton(navController = navController) // Umieszczamy przycisk do wyboru kategorii
 
-            item {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Button(
-                        onClick = { viewModel.addMeal() },
-                        modifier = Modifier.padding(8.dp),
-                        colors = buttonColors(
-                            containerColor = defaultButtonColor
-                        )
-                    ) {
-                        Text("Dodaj posiłek", color = Color.White)
-                    }
-                }
-            }
-        }
-        if (viewModel.showCategoryDialog.value) {
-            CategorySelectionDialog(viewModel = viewModel)
-        }
-
-        if (viewModel.showProductDialog.value && viewModel.selectedCategory.value != null) {
-            ProductSelectionDialog(viewModel = viewModel, categoryId = viewModel.selectedCategory.value!!.id)
-        }
-
-        if (viewModel.showQuantityDialog.value && viewModel.selectedProduct.value != null) {
-            QuantityInputDialog(viewModel = viewModel)
-        }
-    }
-}
-
-@Composable
-fun MealItem(meal: String, mealId: Int, viewModel: MainViewModel, isExpanded: Boolean) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = meal,
-                style = MaterialTheme.typography.labelLarge
-            )
-
-            Box(
+            // Reszta UI, np. przyciski dodawania posiłków
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { viewModel.addMeal() },
                 modifier = Modifier
-                    .padding(end = 4.dp)
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(defaultButtonColor)
-                    .align(Alignment.CenterVertically),
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                colors = buttonColors(containerColor = defaultButtonColor)
             ) {
-                IconButton(
-                    onClick = {
-                        // Tutaj wywołujemy funkcję z ViewModel, aby otworzyć dialog wyboru produktu.
-                        viewModel.toggleShowDialog(true)
-                    },
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Dodaj produkt",
-                        tint = Color.White
-                    )
-                }
+                Text("Dodaj posiłek", color = Color.White)
             }
         }
 
+    }
+}
+
+@Composable
+fun CategoryButton(navController: NavHostController) {
+    Button(
+        onClick = { navController.navigate("categories") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        colors = buttonColors(containerColor = defaultButtonColor)
+    ) {
+        Text("Wybierz kategorię", color = Color.White)
+    }
+}
+
+@Composable
+fun CategoryItem(category: ProductCategory, viewModel: MainViewModel, isExpanded: Boolean) {
+    // Logika dla rozwijania/zwiń kategorii
+    Column(modifier = Modifier
+        .clickable {
+            viewModel.toggleCategoryExpansion(category.id)
+        }
+        .padding(8.dp)
+    ) {
+        Text(text = category.name, style = Typography.labelSmall)
         AnimatedVisibility(visible = isExpanded) {
-            Column {
-            }
-        }
-    }
-}
-@Composable
-fun CategorySelectionDialog(viewModel: MainViewModel) {
-    Dialog(onDismissRequest = { viewModel.toggleCategoryDialog(false) }) {
-        // UI dialogu
-        LazyColumn {
-            items(viewModel.categories.value) { category ->
-                Text(
-                    text = category.name,
-                    modifier = Modifier.clickable {
-                        viewModel.selectedCategory.value = category
-                        viewModel.toggleCategoryDialog(false)
-                        viewModel.toggleProductDialog(true)
-                    }.padding(16.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun ProductSelectionDialog(viewModel: MainViewModel, categoryId: Int) {
-    Dialog(onDismissRequest = { viewModel.toggleProductDialog(false) }) {
-        // UI dialogu
-        val productsInCategory = viewModel.products.value.filter { it.uid == categoryId }
-        LazyColumn {
-            items(productsInCategory) { product ->
-                Text(
-                    text = product.name,
-                    modifier = Modifier.clickable {
-                        viewModel.selectedProduct.value = product
-                        viewModel.toggleProductDialog(false)
-                        viewModel.toggleQuantityDialog(true)
-                    }.padding(16.dp)
-                )
-            }
         }
     }
 }
 
 @Composable
 fun QuantityInputDialog(viewModel: MainViewModel) {
+    val weightText = remember { mutableStateOf("") }
+
+    // Pobierz wybrany produkt z ViewModel
+    val selectedProduct = viewModel.selectedProduct.collectAsState().value
+
+    // Jeżeli nie ma wybranego produktu, nie pokazuj dialogu
+    if (selectedProduct == null || !viewModel.showQuantityDialog.collectAsState().value) {
+        return
+    }
+
     Dialog(onDismissRequest = { viewModel.toggleQuantityDialog(false) }) {
-        // UI dialogu
-        Column(modifier = Modifier.padding(16.dp)) {
-            TextField(
-                value = viewModel.productQuantity.value,
-                onValueChange = { quantity -> viewModel.productQuantity.value = quantity },
-                label = { Text("Ilość (w gramach)") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = {
-                viewModel.addProductToMeal()
-                viewModel.toggleQuantityDialog(false)
-            }) {
-                Text("Dodaj")
+        Surface(
+            shape = MaterialTheme.shapes.medium, // Zaokrąglone rogi
+            shadowElevation = 8.dp // Cień dialogu
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(all = 16.dp) // Dodaj padding wewnątrz dialogu
+                    .wrapContentSize() // Rozmiar wg zawartości
+            ) {
+                Text(
+                    text = "Podaj ilość dla produktu ${selectedProduct.name}",
+                    style = Typography.labelSmall
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = weightText.value,
+                    onValueChange = { newText ->
+                        if (newText.all { it.isDigit() || it == '.' }) {
+                            weightText.value = newText
+                        }
+                    },
+                    label = { Text("Ilość (w gramach)") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        // Konwertuj tekst na liczbę i dodaj produkt
+                        weightText.value.toFloatOrNull()?.let { weight ->
+                            if (weight > 0) {
+                                viewModel.addUserProduct(weight, selectedProduct.categoryId)
+                                viewModel.toggleQuantityDialog(false) // Zamknij dialog
+                            } else {
+                                // Obsłuż błąd: wprowadzono nieprawidłową wagę
+                                // Można wyświetlić jakiś komunikat błędu itp.
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth() // Przycisk na całą szerokość
+                ) {
+                    Text("Dodaj")
+                }
             }
         }
     }
 }
-
 @Composable
-fun ExpandableCategory(
-    category: ProductCategory,
-    viewModel: MainViewModel,
-    showCategories: MutableState<Boolean>
-) {
-    var isExpanded by remember { mutableStateOf(false) }
-    val products by viewModel.products.collectAsState()
-
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { isExpanded = !isExpanded }
-        .padding(8.dp)) {
-        Text(
-            text = category.name,
-            style = MaterialTheme.typography.labelLarge
-        )
-
-        AnimatedVisibility(visible = isExpanded) {
-            Column {
-                products.filter { it.uid in category.startId..category.endId }
-                    .forEach { product ->
-                        Text(
-                            text = product.name,
-                            modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-                        )
+fun CategoriesDialog(viewModel: MainViewModel, onCategorySelected: (Int) -> Unit) {
+    Dialog(onDismissRequest = { viewModel.toggleCategoryDialog(false) }) {
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Wybierz kategorię",
+                    style = Typography.labelLarge,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                val categories = viewModel.categories.collectAsState().value
+                LazyColumn {
+                    items(categories) { category ->
+                        CategoryListItem(category = category, onCategorySelected = onCategorySelected)
                     }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(defaultButtonColor)
+                        .clickable { viewModel.toggleCategoryDialog(false) }
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        "Anuluj",
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        style = Typography.labelMedium
+                    )
+                }
             }
         }
     }
 }
-@Composable
-fun CategoriesList(viewModel: MainViewModel) {
-    val categories by viewModel.categories.collectAsState()
-    val expandedCategories by viewModel.expandedCategories.collectAsState()
 
+@Composable
+fun CategoryListItem(category: ProductCategory, onCategorySelected: (Int) -> Unit) {
+    Text(
+        text = category.name,
+        modifier = Modifier
+            .clickable { onCategorySelected(category.id) }
+            .padding(10.dp),
+        style = MaterialTheme.typography.titleSmall
+    )
+}
+@Composable
+fun ProductList(categoryId: Int, viewModel: MainViewModel) {
+    val products = viewModel.products.collectAsState().value.filter { it.categoryId == categoryId }
     LazyColumn {
-        items(categories) { category ->
-            CategoryItem(category, viewModel, expandedCategories[category.id] ?: false)
+        items(products) { product ->
+            ProductItem(product = product, viewModel = viewModel)
         }
     }
 }
-
-@Composable
-fun CategoryItem(category: ProductCategory, viewModel: MainViewModel, isExpanded: Boolean) {
-    Column(modifier = Modifier.clickable { viewModel.toggleCategoryExpansion(category.id) }) {
-        Text(text = category.name)
-        AnimatedVisibility(visible = isExpanded) {
-            ProductsList(categoryId = category.id, viewModel = viewModel)
-        }
-    }
-}
-
-@Composable
-fun ProductsList(categoryId: Int, viewModel: MainViewModel) {
-    // Tutaj potrzebujesz mechanizmu do filtrowania produktów na podstawie categoryId
-    // oraz logiki do ich wyświetlenia
-}
-
 @Composable
 fun ProductItem(product: Product, viewModel: MainViewModel) {
-    // UI dla pojedynczego produktu
-    Text(
-        text = product.name,
-        modifier = Modifier.clickable { /* Otwórz dialog do dodawania ilości */ }
-    )
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable {
+                viewModel.selectProduct(product)
+                viewModel.toggleQuantityDialog(true)
+            },
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = product.name,
+                style = Typography.labelMedium,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "${product.calories} kcal",
+                style = Typography.labelMedium
+            )
+        }
+    }
 }
 

@@ -13,5 +13,7 @@ data class UserProduct(
     val carbohydrates: Float,
     val sugar: Float,
     val fiber: Float,
-    val addedDate: Long = System.currentTimeMillis()
+    val addedDate: Long = System.currentTimeMillis(),
+    val weight: Float,
+    val categoryId: Int
 )

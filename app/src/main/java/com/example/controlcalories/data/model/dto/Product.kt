@@ -12,5 +12,6 @@ data class Product(
     val fat: Float,
     val carbohydrates: Float,
     val sugar: Float,
-    val fiber: Float
+    val fiber: Float,
+    val categoryId: Int
 )
