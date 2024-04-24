@@ -218,7 +218,7 @@ fun BmiScreen(
                     viewModel.calculateAndSaveBMI()
                     if (showErrorAlert) {
                         coroutineScope.launch {
-                            delay(3000)  // Czas po jakim alert o błędzie zniknie
+                            delay(3000)
                             viewModel.showErrorAlert.value = false
                         }
                     }

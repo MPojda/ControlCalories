@@ -14,7 +14,7 @@ import kotlinx.coroutines.Job
 
 @Composable
 fun EditButton(
-    onClick: () -> Unit, // Zmieniono typ parametru na () -> Unit
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentDescription: String = "Edit"
 ) {

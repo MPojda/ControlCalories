@@ -2,13 +2,13 @@ package com.example.controlcalories
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
+import android.text.format.DateUtils.isToday
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.controlcalories.data.model.domain.calculateAge
 import com.example.controlcalories.data.model.domain.calculateBMI
 import com.example.controlcalories.data.model.domain.getBMICategory
+import com.example.controlcalories.data.model.dto.Meal
 import com.example.controlcalories.data.model.dto.Product
 import com.example.controlcalories.data.model.dto.ProductCategory
 import com.example.controlcalories.data.model.dto.ProductDatabase
@@ -19,11 +19,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.Calendar
+import kotlin.math.roundToInt
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val database: ProductDatabase = ProductDatabase.getInstance(app.applicationContext)
     private val productDao = database.productDao()
     private val userProductDao = database.userProductDao()
+    private val mealDao = database.mealDao()
 
 
     private val sharedPreferences = app.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
@@ -81,6 +85,34 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         loadUserData()
     }
 
+    fun isToday(weekday: String): Boolean {
+        val calendar = Calendar.getInstance()
+        val currentWeekdayIndex = calendar.get(Calendar.DAY_OF_WEEK)
+
+        return when (weekday) {
+            "Pon" -> currentWeekdayIndex == Calendar.MONDAY
+            "Wt" -> currentWeekdayIndex == Calendar.TUESDAY
+            "Śr" -> currentWeekdayIndex == Calendar.WEDNESDAY
+            "Czw" -> currentWeekdayIndex == Calendar.THURSDAY
+            "Pt" -> currentWeekdayIndex == Calendar.FRIDAY
+            "Sob" -> currentWeekdayIndex == Calendar.SATURDAY
+            "Ndz" -> currentWeekdayIndex == Calendar.SUNDAY
+            else -> false
+        }
+    }
+    private fun mapDayOfWeekToString(dayOfWeekNumber: Int): String {
+        return when(dayOfWeekNumber) {
+            Calendar.MONDAY -> "Pon"
+            Calendar.TUESDAY -> "Wt"
+            Calendar.WEDNESDAY -> "Śr"
+            Calendar.THURSDAY -> "Czw"
+            Calendar.FRIDAY -> "Pt"
+            Calendar.SATURDAY -> "Sob"
+            Calendar.SUNDAY -> "Ndz"
+            else -> "Nieznany"
+        }
+    }
+
     private fun loadProducts() {
         viewModelScope.launch {
             productDao.getAllProducts().collectLatest { productList ->
@@ -103,21 +135,37 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             ProductCategory(10, "Orzechy", 391, 399),
             ProductCategory(11, "Słodycze", 400, 457),
             ProductCategory(12, "Soki/Napoje", 458, 476),
-            ProductCategory(13, "Chipsy", 477, 479),
+            ProductCategory(13, "Chipsy/Przyprawy", 477, 479),
             ProductCategory(14, "Dania gotowe", 480, 654)
         )
     }
 
     fun addMeal() {
+        val calendar = Calendar.getInstance()
+        val dayOfWeekNumber = calendar.get(Calendar.DAY_OF_WEEK)
+        val dayOfWeekString = mapDayOfWeekToString(dayOfWeekNumber)
         val nextMealNumber = _meals.value.size + 1
-        _meals.value = _meals.value + "Posiłek $nextMealNumber"
-    }
+        val newMealName = "Posiłek $nextMealNumber"
+        _meals.value = _meals.value + newMealName
 
-    fun toggleMealExpansion(mealId: Int) {
+        viewModelScope.launch {
+            val meal = Meal(name = newMealName, dayOfWeek = dayOfWeekString, mealNumber = nextMealNumber)
+            val mealId = mealDao.insertMeal(meal).toInt()
 
-        val currentState = _expandedMeals.value[mealId] ?: false
-        _expandedMeals.value = _expandedMeals.value.toMutableMap().apply {
-            this[mealId] = !currentState
+            val newUserProduct = UserProduct(
+                name = newMealName,
+                calories = 0.0,
+                protein = 0.0,
+                fat = 0.0,
+                carbohydrates = 0.0,
+                sugar = 0.0,
+                fiber = 0.0,
+                weight = 0f,
+                categoryId = 0,
+                mealId = mealId
+            )
+
+            userProductDao.insert(newUserProduct)
         }
     }
 
@@ -225,63 +273,41 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             apply()
         }
     }
-    fun toggleShowDialog(show: Boolean) {
-        Log.d("ViewModel", "toggleShowDialog: $show")
-        showDialog.value = show
-    }
 
-    fun toggleCategoryDialog(show: Boolean) {
-        showCategoryDialog.value = show
-    }
-
-
-    fun toggleCategoryExpansion(categoryId: Int) {
-        if (_expandedCategoryId.value == categoryId) {
-            _expandedCategoryId.value = null  // Zwinięcie kategorii
-        } else {
-            _expandedCategoryId.value = categoryId  // Rozwinięcie nowej kategorii
-        }
-    }
-    fun addProductToMeal(productId: Int, quantity: String) {
-
-    }
     fun addUserProduct(weight: Float, categoryId: Int) {
         val product = _selectedProduct.value
         if (product != null && weight > 0) {
             val userProduct = UserProduct(
                 id = 0,
                 name = product.name,
-                calories = (product.calories * weight / 100).toInt(),
-                protein = product.protein * weight / 100,
-                fat = product.fat * weight / 100,
-                carbohydrates = product.carbohydrates * weight / 100,
-                sugar = product.sugar * weight / 100,
-                fiber = product.fiber * weight / 100,
+                ((product.calories * weight / 100) * 10).roundToInt() / 10.0,
+                ((product.protein * weight / 100) * 10).roundToInt() / 10.0,
+                ((product.fat * weight / 100) * 10).roundToInt() / 10.0,
+                ((product.carbohydrates * weight / 100) * 10).roundToInt() / 10.0,
+                ((product.sugar * weight / 100) * 10).roundToInt() / 10.0,
+                ((product.fiber * weight / 100) * 10).roundToInt() / 10.0,
                 addedDate = System.currentTimeMillis(),
                 weight = weight,
-                categoryId = categoryId
+                categoryId = categoryId,
+                mealId = 0
             )
 
             viewModelScope.launch {
                 userProductDao.insert(userProduct)
             }
-            // Reset selected product after adding to meal
+
             _selectedProduct.value = null
         }
     }
 
-    fun toggleCategory(categoryId: Int?) {
-        _expandedCategoryId.value = if (_expandedCategoryId.value == categoryId) null else categoryId
-    }
     fun selectCategory(categoryId: Int) {
         _selectedCategoryId.value = categoryId
     }
     fun selectProduct(product: Product) {
         _selectedProduct.value = product
     }
-    fun toggleQuantityDialog(show: Boolean) {
-        showQuantityDialog.value = show
-    }
+
+
 
 }
 

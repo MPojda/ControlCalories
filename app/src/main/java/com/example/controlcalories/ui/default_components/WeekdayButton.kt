@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.controlcalories.MainViewModel
 import com.example.controlcalories.ui.theme.defaultButtonColor
 import com.example.controlcalories.ui.theme.defaultColor
 import com.example.controlcalories.ui.theme.defaultCorrectColor
@@ -29,9 +30,10 @@ import java.util.*
 fun WeekdayButton(
     text: String,
     onClick: () -> Unit,
+    viewModel: MainViewModel,
     modifier: Modifier = Modifier
 ) {
-    val isToday = isToday(text)
+    val isToday = viewModel.isToday(text)
 
     androidx.compose.material3.Button(
         onClick = onClick,
@@ -60,18 +62,3 @@ fun WeekdayButton(
 }
 
 
-private fun isToday(weekday: String): Boolean {
-    val calendar = Calendar.getInstance()
-    val currentWeekdayIndex = calendar.get(Calendar.DAY_OF_WEEK)
-
-    return when (weekday) {
-        "Pon" -> currentWeekdayIndex == Calendar.MONDAY
-        "Wt" -> currentWeekdayIndex == Calendar.TUESDAY
-        "Śr" -> currentWeekdayIndex == Calendar.WEDNESDAY
-        "Czw" -> currentWeekdayIndex == Calendar.THURSDAY
-        "Pt" -> currentWeekdayIndex == Calendar.FRIDAY
-        "Sob" -> currentWeekdayIndex == Calendar.SATURDAY
-        "Ndz" -> currentWeekdayIndex == Calendar.SUNDAY
-        else -> false
-    }
-}

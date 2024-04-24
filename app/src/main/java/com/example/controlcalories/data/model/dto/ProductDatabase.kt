@@ -7,10 +7,11 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Product::class, UserProduct::class], version = 3)
+@Database(entities = [Product::class, UserProduct::class, Meal::class], version = 7)
 abstract class ProductDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun userProductDao(): UserProductDao
+    abstract fun mealDao(): MealDao
 
     companion object {
         @Volatile

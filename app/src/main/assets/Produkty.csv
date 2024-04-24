@@ -479,177 +479,177 @@
 478;Chipsy paprykowe;565;6;40;50,4;0,4;8,4;13
 479;Chipsy solone;568;5,6;40,7;49,9;0,4;8,3;13
 480;"Przyprawa ""jarzynka""";97;1,9;0,4;23,3;4,5;4;13
-481;Majonez domowy z olejem rzepakowym;714;1,3;79;2,6;2;0,1;13
-482;Majonez domowy z olejem słonecznikowym;714;1,3;79;2,6;2;0,1;13
-483;Musztarda;165;5,7;6,4;22;10,5;1,7;13
-484;Sól biała;0;0;0;0;0;0;13
-485;Żelatyna;343;84,2;0,1;0;0;0;13
-486;Barszcz czerwony zabielany;34;2,1;1,4;3,4;1,8;0,5;13
-487;Barszcz ukraiński z fasolką szparagową ;38;1,9;0,6;6,9;2,3;1,3;13
-488;Barszcz z boćwiną;30;1,5;1,7;2,5;0,8;0,5;13
-489;Kapuśniak z kwaszonej kapusty ;23;1,5;1,2;1,7;0,4;0,4;13
-490;Kapuśniak ze słodkiej kapusty;33;0,7;2,1;3,2;0,6;0,7;13
-491;Kasza manna na wywarze jarzynowym;22;0,5;0,8;3,4;0,2;0,4;13
-492;Krem z zielonego groszku;67;3,1;3,8;5,9;0,6;1,6;13
-493;Krupnik z kaszy gryczanej;45;1,7;1,2;7,2;0,3;0,9;13
-494;Krupnik z kaszy jęczmiennej;42;1,5;0,9;7,4;0,3;0,9;13
-495; Krupnik z ryżu;45;1,5;1,1;7,6;0,3;0,8;13
-496;Zupa cebulowa;45;1,4;2,7;4;0,3;0,4;13
-497;Zupa cytrynowa z ryżem;59;1,4;2,2;8,6;0,8;0,6;13
-498;Zupa fasolowa;68;4;1,8;10;0,4;2,4;13
-499;Zupa grochowa;71;4,4;2,4;8,9;0,1;2,2;13
-500;Zupa grzybowa zabielana;29;1,5;1,9;1,8;0,1;0,4;13
-501;Zupa jarzynowa zabielana;46;1,7;1,8;6,2;0,3;1,1;13
-502;Zupa kalafiorowa;29;1,7;0,5;4,9;0,6;1;13
-503;Zupa neapolitańska z ementalerem;63;2,2;2,5;8,1;0,2;0,5;13
-504;Zupa ogórkowa;43;1,4;2;5;0,4;0,4;13
-505;Zupa owocowa z jabłek ;43;0,1;0,1;10,6;7,3;0,6;13
-506;Zupa pomidorowa;12;1;0,1;2,1;0,8;0,5;13
-507;Zupa pomidorowa z makaronem;35;1,6;1,8;3,3;0,4;0,2;13
-508;Zupa pomidorowa z ryżem;37;1,5;1,8;3,9;0,4;0,2;13
-509;Zupa pomidorowa zabielana;18;1,2;0,6;2,3;0,8;0,5;13
-510;Zupa selerowa;39;1,6;1,8;4,5;0,3;0,8;13
-511;Zupa selerowa z grzankami;54;1,9;1,9;8;0,6;1,3;13
-512;Zupa szczawiowa;40;1,7;2,5;2,9;0,6;0,2;13
-513;Zupa szpinakowa z ziemniakami;42;2,2;0,9;6,6;0,4;1;13
-514;Zupa z fasoli szparagowej;47;2,2;0,6;8,9;0,4;1,8;13
-515;Zupa z porów z makaronem;61;2,5;1,4;10,3;0,5;1,4;13
-516;Zupa z zielonego groszku;62;3,2;1,2;11,2;1,9;3,1;13
-517;Zupa ziemniaczana;40;1,4;1,1;6,6;0,4;0,9;13
-518;Żurek;126;2,7;3,2;22,9;0,7;3,1;13
-519;Kasza jęczmienna na mleku 3,2% tłuszczu;64;2,6;2,2;8,5;0,2;0,4;13
-520;Kasza manna na mleku 3,2% tłuszczu;67;2,7;2,1;9,3;0,9;0,2;13
-521;Kluski lane na mleku 3,2% tłuszczu;69;3,6;3,1;6,8;0,2;0,1;13
-522;Makaron na mleku 3,2% tłuszczu;66;2,9;2,2;8,6;0,2;0,2;13
-523;Płatki owsiane na mleku 3,2% tłuszczu;63;2,7;2,3;8,2;0,2;0,6;13
-524;Ryż na mleku 3,2% tłuszczu;66;2,7;2,1;9,1;0,1;0,2;13
-525;Dorsz w jarzynach;122;15,6;5,2;3,9;0,8;1,4;13
-526;Dorsz, filety po grecku;155;10,6;10,8;4,6;0,6;1,2;13
-527;Dorsz, filety panierowane, smażone;275;19,2;15,8;14,5;0;0,9;13
-528;Karp w galarecie z warzywami;138;26,1;2,9;2,1;0,5;0,9;13
-529;Karp z wody;104;16;3,7;2;0,5;1;13
-530;Dorsz, kotlet mielony, smażony;261;15;17,8;10,9;0,3;0,7;13
-531;Dorsz, pulpety;114;14,3;2,6;8,7;0,5;1;13
-532;Dorsz z rusztu;172;22,1;9,1;0,6;0;0,2;13
-533;Łosoś saute, smażony;380;21,2;31,4;4;0;0,1;13
-534;Łosoś z rusztu;283;20,7;22,3;0,6;0;0,2;13
-535;Cielęcina w potrawce;105;13,5;4,1;3,9;0,5;0,8;13
-536;Klopsiki cielęce mielone, duszone;252;16,3;14,6;14,2;0,2;0,7;13
-537;Kotlet cielęcy panierowany, smażony;367;27,1;21,3;17,4;0;1,2;13
-538;Pieczeń cielęca , duszona;192;20,1;11,8;1,7;0,1;0,2;13
-539;Kotlet mielony z kury, smażony;384;20;27,8;14,2;0,2;0,6;13
-540;Kotlety z kurczaka saute, smażone;241;20,3;16,5;3,2;0;0,1;13
-541;Kotlety z kurczaka panierowane, smażone;250;19,8;15,8;7,6;0;0,6;13
-542;Kura w galarecie;193;27,3;8,8;1,2;0,3;0,5;13
-543;Kurczak w jarzynach, gotowany;103;7,6;6,4;4,6;0,7;1,7;13
-544;Kurczęta pieczone;179;16,4;12,7;0,1;0;0,1;13
-545;Medaliony z indyka, smażone;247;18,6;17,9;3,4;0;0,1;13
-546;Potrawka z kurczaka;150;13,3;9;4,6;0,6;1;13
-547;Bitki wieprzowe, duszone;196;10,4;16,1;2,6;0;0,1;13
-548;Bitki wieprzowe w jarzynach, duszone;201;10,7;16,1;4,3;0,4;0,9;13
-549;Galaretka z óżek wieprzowych;203;16,9;14,9;0,8;0,2;0,4;13
-550;Kotlet schabowy panierowany, smażony;353;19,1;24,1;15,9;0;1;13
-551;Pieczeń wieprzowa, duszona;226;11,4;19,8;1,2;0,2;0,2;13
-552;Rolada wieprzowa, pieczona;414;21,3;32,6;9,9;0,2;0,3;13
-553;Schab, pieczony;291;30,4;18,7;0,7;0,2;0,2;13
-554;Stek wieprzowy, smażony;472;21,7;42,7;1,5;0;0,1;13
-555;Wątróbka wieprzowa saute, smażona;242;20,5;15,8;4,8;0,4;0,3;13
-556;Wieprzowina, gotowana;365;22,5;29,8;3,1;0,9;1,4;13
-557;Żeberka wieprzowe, duszone;210;7,9;19,2;2,2;0,2;0,2;13
-558;Befsztyk bity wiejski, smażony;258;19,4;19,6;1,6;0,2;0,2;13
-559;Bitki wołowe , duszone;103;13,6;4,4;2,3;0;0,1;13
-560;Bitki wołowe w jarzynach, duszone;120;14,3;4,5;6,6;1,2;2;13
-561;Boeuf Strogonow, duszony;221;19,6;14,3;3,7;0,2;0,2;13
-562;Bryzol wolowy z polędwicy, smażony;253;24,7;16,6;1,4;0;0;13
-563;Gulasz wołowy, duszony;149;14,1;9,2;2,6;0,3;0,3;13
-564;Polędwica wołowa, pieczona;168;19,7;9,9;0;0;0;13
-565;Pieczeń wołowa, duszona;156;15,8;9,5;1,9;0,1;0,1;13
-566;Sztuka mięsa, gotowana;227;30,8;10,4;3,2;0,8;1,3;13
-567;Klopsiki mielone z mięsa mieszanego, duszone;273;13,7;17,5;15,7;0,4;0,5;13
-568;Kotlet mielony z mięsa mieszanego, smażony;286;13,1;21,1;11,7;0,2;0,7;13
-569;Pasztet z mięsa mieszanego, pieczony;362;15,1;31,1;6,5;0,4;0,4;13
-570;Pieczeń rzymska;209;14,5;11,4;12,5;0,2;0,6;13
-571;Pulpety z mięsa mieszanego, gotowane;226;18,8;11,1;13,3;0,9;1,4;13
-572;Mizeria ze śmietaną;34;1;2,2;2,8;0,1;0,4;13
-573;Sałata zielona z olejem;113;1;11,6;2,1;0,1;1;13
-574;Sałata zielona ze śmietaną;42;1,4;2,3;4,5;1,9;0,9;13
-575;Surówka z cykorii i jabłek;163;1;16,4;3,8;0,7;0,8;13
-576;Surówka z kapusty iałej;72;1,6;4,7;7;0,6;2,3;13
-577;Surówka z kapusty kwaszonej;72;0,9;4,7;7,5;3,4;1,9;13
-578;Surówka z kapusty pekińskiej, jabłek, papryki z olejem;57;1,1;3,8;5,7;1;2,1;13
-579;Surówka z kapusty pekińskiej z majonezem;98;1,6;8,1;6;1,4;2,2;13
-580;Surówka z marchwi i jabłek;66;1;0,3;16,6;7,7;3,8;13
-581;Surówka z ogórków i pomidorów;34;1,1;1,8;3,6;0,3;0,7;13
-582;Surówka z owoców;106;0,5;0,3;25,9;16,9;1,8;13
-583;Surówka z owoców i warzyw;149;1,1;14,3;5,1;1,9;1;13
-584;Surówka z papryki;93;1;7,5;6,3;2;1,3;13
-585;Surówka z pomidorów;16;0,8;0,2;3,2;0,1;1,1;13
-586;Surówka z porów z jabłkami;145;1,7;12,5;7,9;2,9;2,2;13
-587;Surówka z rzodkiewki;95;7,5;5,9;3,5;0;0,9;13
-588;Surówka z selerów i jabłek z olejem;99;1,1;7,5;8,9;3,4;3,6;13
-589;Surówka z selerów, jablek i marchwi;67;0,9;0,4;16,5;7,4;3,5;13
-590;Surówka wielowarzywna z jogurtem naturalnym;38;1,7;0,6;7;2,2;1,3;13
-591;Brukselka, gotowana, z maslem;119;4,2;7,1;12;3,4;4,6;13
-592;Buraki, gotowane, doprawiane;74;1,6;3,5;10;6,8;1,8;13
-593;Buraki z jabłkami;73;1,5;3,3;10,3;6,6;1,8;13
-594;Buraki, zasmażane;86;1,6;5,5;8,6;4,9;1,7;13
-595;Buraki ze śmietaną;69;1,8;3,4;8,8;4,8;1,7;13
-596;Ćwikła;44;1,6;0,1;10,2;7,3;2,1;13
-597;Dynia z pomidorami;48;1,2;2,4;6,5;1,3;2,1;13
-598;Fasola szparagowa, gotowana, z masłem;108;2,9;6,9;10,3;0,5;2,9;13
-599;Groszek zielony, gotowany, z masłem;106;3,7;6,8;9,3;1,1;3,2;13
-600;Kalafior, gotowany, z masłem;87;2;6,8;5,5;0,1;1,8;13
-601;Kapusta biała, gotowana, zasmażana;73;1,6;4,7;7,1;0,4;2;13
-602;Marchewka z groszkiem, gotowana;70;1,7;3,1;10,7;3,2;3,4;13
-603;Marchewka, gotowana, zasmażana;75;1,1;4,8;8,4;1,6;2,9;13
-604;Sałatka jarzynowa z warzyw gotowanych z majonezem;197;2,9;16,5;10,9;0,9;2,5;13
-605;Sałatka jarzynowa z warzyw gotowanych z majonezem i jogurtem;121;3,2;7,5;11,6;1,2;2,5;13
-606;Sałatka z kapusty czerwonej;87;1,4;6,5;7;1;2,1;13
-607;Szpinak, gotowany, zasmażany;90;3,8;6,1;6,2;0,3;2,3;13
-608;Bliny ziemniaczane;259;5,7;16,3;23,4;1,9;1,4;13
-609;Budyń z mięsa i makaronu;174;10,7;4,4;23;0,3;1;13
-610;Ciasto naleśnikowe biszkoptowe;189;8,5;5,9;25,5;1,9;0,7;13
-611;Ciasto naleśnikowe bez piany;176;6,2;4,2;28,3;0,1;0,8;13
-612;Kasza gryczana na sypko, z tłuszczem roślinnym;136;4,5;2,3;25;0,3;2,1;13
-613;Kasza perłowa na sypko, z tłuszczem roślinnym;118;2,2;2;23,6;0,2;2;13
-614;Kluski kładzione;167;5,5;1,3;33,3;0,1;1;13
-615;Kluski lane;94;4,3;2;14,8;0;0,5;13
-616;Kluski śląskie;172;2,6;3,8;32,1;0,5;1,4;13
-617;Knedle ze śliwkami;165;2,8;5,9;25,7;4,8;1,4;13
-618;Kopytka;150;4,2;0,7;32,1;0,4;1,6;13
-619;Kotlety ziemniaczane;246;4,4;12,8;29,3;0,7;2,1;13
-620;Kulebiak;223;7,8;12,7;19,9;1;0,7;13
-621;Leniwe pierogi z sera twarogowego;243;14,6;13,9;15;4,5;0,3;13
-622;Makaron dwujajeczny, gotowany;109;3,5;0,7;22,1;0,1;0,7;13
-623;Naleśniki z kapustą;151;3,3;9,2;15,1;0,5;2,2;13
-624;Naleśniki z serem twarogowym;243;10,2;10,3;27,3;13,5;0,4;13
-625;Paszteciki drożdżowe z mięsem;346;9,7;20,4;31,9;0,3;1,6;13
-626;Pierogi ruskie;169;5,9;5;25,5;0,2;1,1;13
-627;Pierogi z mięsem;206;11,9;10,1;17,1;0,1;0,6;13
-628;Pierogi z serem twarogowym;240;11,1;9,9;26,6;8,1;0,5;13
-629;Pierogi z truskawkami;244;4,1;11,3;32,2;4;1,7;13
-630;Pizza mięsno -ziołowa;336;18;13,2;36,8;1,4;1,8;13
-631;Pizza z pieczarkami i cebulą;296;13,3;13,1;32,1;1,5;1,9;13
-632;Placki ziemniaczane;235;3,6;14,5;23,6;0,7;1,8;13
-633;Pyzy ziemniaczane;215;3,7;6,2;37,4;0,6;3;13
-634;Pyzy ziemniaczane z mięsem;297;7,9;14;36,2;0,9;2,6;13
-635;Risotto z mięsem;229;6,8;11,9;24,2;0,2;0,9;13
-636;Ryż na sypko, z tłuszczem roślinnym;136;2,4;1,5;28,4;0,1;0,9;13
-637;Ryż z jabłkami;156;2;2,2;32,3;12,4;1,2;13
-638;Ziemniaki puree;92;2,1;1,4;18,4;0,5;1,5;13
-639;Ziemniaki, z tłuszczem roślinnym;108;2;3,1;18,7;0,5;1,5;13
-640;Jaja gotowane;109;9,8;7,6;0,5;0;0;13
-641;Jaja sadzone;168;9,9;14,2;0,6;0;0;13
-642;Jajecznica;119;9,8;8,7;0,5;0;0;13
-643;Kotlety z jaj, smażone;277;8,1;22,8;10,8;0,2;0,5;13
-644;Omlet biszkoptowy ze szpinakiem;142;5,9;9,7;9,3;0,2;2,4;13
-645;Gruszki w sosie waniliowym;155;1,6;1,1;34,8;25,6;1,4;13
-646;Jabłka pieczone;96;0,3;1,6;20,8;13,7;1,6;13
-647;Jabłka w kruchym cieście;351;4,4;17,4;45;16,9;1,7;13
-648;Kisiel porzeczkowy;102;0,3;0,1;25,7;17,7;2;13
-649;Kisiel waniliowy;121;3,3;4,5;16,6;9,1;0;13
-650;Kompot z jabłek;53;0,2;0,1;13,2;9,9;1;13
-651;Kompot z wiśni;70;0,2;0,1;16,9;14,2;0,3;13
-652;Mus jabłkowy;126;2,2;0,2;28,7;24,8;0,8;13
-653;Truskawki w galaretce;128;15,4;0,2;16,1;13,8;0,6;13
-654;Truskawki z bitą śmietaną ;129;1,1;10,4;8,6;4,1;0,9;13
+481;Majonez domowy z olejem rzepakowym;714;1,3;79;2,6;2;0,1;14
+482;Majonez domowy z olejem słonecznikowym;714;1,3;79;2,6;2;0,1;14
+483;Musztarda;165;5,7;6,4;22;10,5;1,7;14
+484;Sól biała;0;0;0;0;0;0;14
+485;Żelatyna;343;84,2;0,1;0;0;0;14
+486;Barszcz czerwony zabielany;34;2,1;1,4;3,4;1,8;0,5;14
+487;Barszcz ukraiński z fasolką szparagową ;38;1,9;0,6;6,9;2,3;1,3;14
+488;Barszcz z boćwiną;30;1,5;1,7;2,5;0,8;0,5;14
+489;Kapuśniak z kwaszonej kapusty ;23;1,5;1,2;1,7;0,4;0,4;14
+490;Kapuśniak ze słodkiej kapusty;33;0,7;2,1;3,2;0,6;0,7;14
+491;Kasza manna na wywarze jarzynowym;22;0,5;0,8;3,4;0,2;0,4;14
+492;Krem z zielonego groszku;67;3,1;3,8;5,9;0,6;1,6;14
+493;Krupnik z kaszy gryczanej;45;1,7;1,2;7,2;0,3;0,9;14
+494;Krupnik z kaszy jęczmiennej;42;1,5;0,9;7,4;0,3;0,9;14
+495; Krupnik z ryżu;45;1,5;1,1;7,6;0,3;0,8;14
+496;Zupa cebulowa;45;1,4;2,7;4;0,3;0,4;14
+497;Zupa cytrynowa z ryżem;59;1,4;2,2;8,6;0,8;0,6;14
+498;Zupa fasolowa;68;4;1,8;10;0,4;2,4;14
+499;Zupa grochowa;71;4,4;2,4;8,9;0,1;2,2;14
+500;Zupa grzybowa zabielana;29;1,5;1,9;1,8;0,1;0,4;14
+501;Zupa jarzynowa zabielana;46;1,7;1,8;6,2;0,3;1,1;14
+502;Zupa kalafiorowa;29;1,7;0,5;4,9;0,6;1;14
+503;Zupa neapolitańska z ementalerem;63;2,2;2,5;8,1;0,2;0,5;14
+504;Zupa ogórkowa;43;1,4;2;5;0,4;0,4;14
+505;Zupa owocowa z jabłek ;43;0,1;0,1;10,6;7,3;0,6;14
+506;Zupa pomidorowa;12;1;0,1;2,1;0,8;0,5;14
+507;Zupa pomidorowa z makaronem;35;1,6;1,8;3,3;0,4;0,2;14
+508;Zupa pomidorowa z ryżem;37;1,5;1,8;3,9;0,4;0,2;14
+509;Zupa pomidorowa zabielana;18;1,2;0,6;2,3;0,8;0,5;14
+510;Zupa selerowa;39;1,6;1,8;4,5;0,3;0,8;14
+511;Zupa selerowa z grzankami;54;1,9;1,9;8;0,6;1,3;14
+512;Zupa szczawiowa;40;1,7;2,5;2,9;0,6;0,2;14
+513;Zupa szpinakowa z ziemniakami;42;2,2;0,9;6,6;0,4;1;14
+514;Zupa z fasoli szparagowej;47;2,2;0,6;8,9;0,4;1,8;14
+515;Zupa z porów z makaronem;61;2,5;1,4;10,3;0,5;1,4;14
+516;Zupa z zielonego groszku;62;3,2;1,2;11,2;1,9;3,1;14
+517;Zupa ziemniaczana;40;1,4;1,1;6,6;0,4;0,9;14
+518;Żurek;126;2,7;3,2;22,9;0,7;3,1;14
+519;Kasza jęczmienna na mleku 3,2% tłuszczu;64;2,6;2,2;8,5;0,2;0,4;14
+520;Kasza manna na mleku 3,2% tłuszczu;67;2,7;2,1;9,3;0,9;0,2;14
+521;Kluski lane na mleku 3,2% tłuszczu;69;3,6;3,1;6,8;0,2;0,1;14
+522;Makaron na mleku 3,2% tłuszczu;66;2,9;2,2;8,6;0,2;0,2;14
+523;Płatki owsiane na mleku 3,2% tłuszczu;63;2,7;2,3;8,2;0,2;0,6;14
+524;Ryż na mleku 3,2% tłuszczu;66;2,7;2,1;9,1;0,1;0,2;14
+525;Dorsz w jarzynach;122;15,6;5,2;3,9;0,8;1,4;14
+526;Dorsz, filety po grecku;155;10,6;10,8;4,6;0,6;1,2;14
+527;Dorsz, filety panierowane, smażone;275;19,2;15,8;14,5;0;0,9;14
+528;Karp w galarecie z warzywami;138;26,1;2,9;2,1;0,5;0,9;14
+529;Karp z wody;104;16;3,7;2;0,5;1;14
+530;Dorsz, kotlet mielony, smażony;261;15;17,8;10,9;0,3;0,7;14
+531;Dorsz, pulpety;114;14,3;2,6;8,7;0,5;1;14
+532;Dorsz z rusztu;172;22,1;9,1;0,6;0;0,2;14
+533;Łosoś saute, smażony;380;21,2;31,4;4;0;0,1;14
+534;Łosoś z rusztu;283;20,7;22,3;0,6;0;0,2;14
+535;Cielęcina w potrawce;105;13,5;4,1;3,9;0,5;0,8;14
+536;Klopsiki cielęce mielone, duszone;252;16,3;14,6;14,2;0,2;0,7;14
+537;Kotlet cielęcy panierowany, smażony;367;27,1;21,3;17,4;0;1,2;14
+538;Pieczeń cielęca , duszona;192;20,1;11,8;1,7;0,1;0,2;14
+539;Kotlet mielony z kury, smażony;384;20;27,8;14,2;0,2;0,6;14
+540;Kotlety z kurczaka saute, smażone;241;20,3;16,5;3,2;0;0,1;14
+541;Kotlety z kurczaka panierowane, smażone;250;19,8;15,8;7,6;0;0,6;14
+542;Kura w galarecie;193;27,3;8,8;1,2;0,3;0,5;14
+543;Kurczak w jarzynach, gotowany;103;7,6;6,4;4,6;0,7;1,7;14
+544;Kurczęta pieczone;179;16,4;12,7;0,1;0;0,1;14
+545;Medaliony z indyka, smażone;247;18,6;17,9;3,4;0;0,1;14
+546;Potrawka z kurczaka;150;13,3;9;4,6;0,6;1;14
+547;Bitki wieprzowe, duszone;196;10,4;16,1;2,6;0;0,1;14
+548;Bitki wieprzowe w jarzynach, duszone;201;10,7;16,1;4,3;0,4;0,9;14
+549;Galaretka z óżek wieprzowych;203;16,9;14,9;0,8;0,2;0,4;14
+550;Kotlet schabowy panierowany, smażony;353;19,1;24,1;15,9;0;1;14
+551;Pieczeń wieprzowa, duszona;226;11,4;19,8;1,2;0,2;0,2;14
+552;Rolada wieprzowa, pieczona;414;21,3;32,6;9,9;0,2;0,3;14
+553;Schab, pieczony;291;30,4;18,7;0,7;0,2;0,2;14
+554;Stek wieprzowy, smażony;472;21,7;42,7;1,5;0;0,1;14
+555;Wątróbka wieprzowa saute, smażona;242;20,5;15,8;4,8;0,4;0,3;14
+556;Wieprzowina, gotowana;365;22,5;29,8;3,1;0,9;1,4;14
+557;Żeberka wieprzowe, duszone;210;7,9;19,2;2,2;0,2;0,2;14
+558;Befsztyk bity wiejski, smażony;258;19,4;19,6;1,6;0,2;0,2;14
+559;Bitki wołowe , duszone;103;13,6;4,4;2,3;0;0,1;14
+560;Bitki wołowe w jarzynach, duszone;120;14,3;4,5;6,6;1,2;2;14
+561;Boeuf Strogonow, duszony;221;19,6;14,3;3,7;0,2;0,2;14
+562;Bryzol wolowy z polędwicy, smażony;253;24,7;16,6;1,4;0;0;14
+563;Gulasz wołowy, duszony;149;14,1;9,2;2,6;0,3;0,3;14
+564;Polędwica wołowa, pieczona;168;19,7;9,9;0;0;0;14
+565;Pieczeń wołowa, duszona;156;15,8;9,5;1,9;0,1;0,1;14
+566;Sztuka mięsa, gotowana;227;30,8;10,4;3,2;0,8;1,3;14
+567;Klopsiki mielone z mięsa mieszanego, duszone;273;13,7;17,5;15,7;0,4;0,5;14
+568;Kotlet mielony z mięsa mieszanego, smażony;286;13,1;21,1;11,7;0,2;0,7;14
+569;Pasztet z mięsa mieszanego, pieczony;362;15,1;31,1;6,5;0,4;0,4;14
+570;Pieczeń rzymska;209;14,5;11,4;12,5;0,2;0,6;14
+571;Pulpety z mięsa mieszanego, gotowane;226;18,8;11,1;13,3;0,9;1,4;14
+572;Mizeria ze śmietaną;34;1;2,2;2,8;0,1;0,4;14
+573;Sałata zielona z olejem;113;1;11,6;2,1;0,1;1;14
+574;Sałata zielona ze śmietaną;42;1,4;2,3;4,5;1,9;0,9;14
+575;Surówka z cykorii i jabłek;163;1;16,4;3,8;0,7;0,8;14
+576;Surówka z kapusty iałej;72;1,6;4,7;7;0,6;2,3;14
+577;Surówka z kapusty kwaszonej;72;0,9;4,7;7,5;3,4;1,9;14
+578;Surówka z kapusty pekińskiej, jabłek, papryki z olejem;57;1,1;3,8;5,7;1;2,1;14
+579;Surówka z kapusty pekińskiej z majonezem;98;1,6;8,1;6;1,4;2,2;14
+580;Surówka z marchwi i jabłek;66;1;0,3;16,6;7,7;3,8;14
+581;Surówka z ogórków i pomidorów;34;1,1;1,8;3,6;0,3;0,7;14
+582;Surówka z owoców;106;0,5;0,3;25,9;16,9;1,8;14
+583;Surówka z owoców i warzyw;149;1,1;14,3;5,1;1,9;1;14
+584;Surówka z papryki;93;1;7,5;6,3;2;1,3;14
+585;Surówka z pomidorów;16;0,8;0,2;3,2;0,1;1,1;14
+586;Surówka z porów z jabłkami;145;1,7;12,5;7,9;2,9;2,2;14
+587;Surówka z rzodkiewki;95;7,5;5,9;3,5;0;0,9;14
+588;Surówka z selerów i jabłek z olejem;99;1,1;7,5;8,9;3,4;3,6;14
+589;Surówka z selerów, jablek i marchwi;67;0,9;0,4;16,5;7,4;3,5;14
+590;Surówka wielowarzywna z jogurtem naturalnym;38;1,7;0,6;7;2,2;1,3;14
+591;Brukselka, gotowana, z maslem;119;4,2;7,1;12;3,4;4,6;14
+592;Buraki, gotowane, doprawiane;74;1,6;3,5;10;6,8;1,8;14
+593;Buraki z jabłkami;73;1,5;3,3;10,3;6,6;1,8;14
+594;Buraki, zasmażane;86;1,6;5,5;8,6;4,9;1,7;14
+595;Buraki ze śmietaną;69;1,8;3,4;8,8;4,8;1,7;14
+596;Ćwikła;44;1,6;0,1;10,2;7,3;2,1;14
+597;Dynia z pomidorami;48;1,2;2,4;6,5;1,3;2,1;14
+598;Fasola szparagowa, gotowana, z masłem;108;2,9;6,9;10,3;0,5;2,9;14
+599;Groszek zielony, gotowany, z masłem;106;3,7;6,8;9,3;1,1;3,2;14
+600;Kalafior, gotowany, z masłem;87;2;6,8;5,5;0,1;1,8;14
+601;Kapusta biała, gotowana, zasmażana;73;1,6;4,7;7,1;0,4;2;14
+602;Marchewka z groszkiem, gotowana;70;1,7;3,1;10,7;3,2;3,4;14
+603;Marchewka, gotowana, zasmażana;75;1,1;4,8;8,4;1,6;2,9;14
+604;Sałatka jarzynowa z warzyw gotowanych z majonezem;197;2,9;16,5;10,9;0,9;2,5;14
+605;Sałatka jarzynowa z warzyw gotowanych z majonezem i jogurtem;121;3,2;7,5;11,6;1,2;2,5;14
+606;Sałatka z kapusty czerwonej;87;1,4;6,5;7;1;2,1;14
+607;Szpinak, gotowany, zasmażany;90;3,8;6,1;6,2;0,3;2,3;14
+608;Bliny ziemniaczane;259;5,7;16,3;23,4;1,9;1,4;14
+609;Budyń z mięsa i makaronu;174;10,7;4,4;23;0,3;1;14
+610;Ciasto naleśnikowe biszkoptowe;189;8,5;5,9;25,5;1,9;0,7;14
+611;Ciasto naleśnikowe bez piany;176;6,2;4,2;28,3;0,1;0,8;14
+612;Kasza gryczana na sypko, z tłuszczem roślinnym;136;4,5;2,3;25;0,3;2,1;14
+613;Kasza perłowa na sypko, z tłuszczem roślinnym;118;2,2;2;23,6;0,2;2;14
+614;Kluski kładzione;167;5,5;1,3;33,3;0,1;1;14
+615;Kluski lane;94;4,3;2;14,8;0;0,5;14
+616;Kluski śląskie;172;2,6;3,8;32,1;0,5;1,4;14
+617;Knedle ze śliwkami;165;2,8;5,9;25,7;4,8;1,4;14
+618;Kopytka;150;4,2;0,7;32,1;0,4;1,6;14
+619;Kotlety ziemniaczane;246;4,4;12,8;29,3;0,7;2,1;14
+620;Kulebiak;223;7,8;12,7;19,9;1;0,7;14
+621;Leniwe pierogi z sera twarogowego;243;14,6;13,9;15;4,5;0,3;14
+622;Makaron dwujajeczny, gotowany;109;3,5;0,7;22,1;0,1;0,7;14
+623;Naleśniki z kapustą;151;3,3;9,2;15,1;0,5;2,2;14
+624;Naleśniki z serem twarogowym;243;10,2;10,3;27,3;13,5;0,4;14
+625;Paszteciki drożdżowe z mięsem;346;9,7;20,4;31,9;0,3;1,6;14
+626;Pierogi ruskie;169;5,9;5;25,5;0,2;1,1;14
+627;Pierogi z mięsem;206;11,9;10,1;17,1;0,1;0,6;14
+628;Pierogi z serem twarogowym;240;11,1;9,9;26,6;8,1;0,5;14
+629;Pierogi z truskawkami;244;4,1;11,3;32,2;4;1,7;14
+630;Pizza mięsno -ziołowa;336;18;13,2;36,8;1,4;1,8;14
+631;Pizza z pieczarkami i cebulą;296;13,3;13,1;32,1;1,5;1,9;14
+632;Placki ziemniaczane;235;3,6;14,5;23,6;0,7;1,8;14
+633;Pyzy ziemniaczane;215;3,7;6,2;37,4;0,6;3;14
+634;Pyzy ziemniaczane z mięsem;297;7,9;14;36,2;0,9;2,6;14
+635;Risotto z mięsem;229;6,8;11,9;24,2;0,2;0,9;14
+636;Ryż na sypko, z tłuszczem roślinnym;136;2,4;1,5;28,4;0,1;0,9;14
+637;Ryż z jabłkami;156;2;2,2;32,3;12,4;1,2;14
+638;Ziemniaki puree;92;2,1;1,4;18,4;0,5;1,5;14
+639;Ziemniaki, z tłuszczem roślinnym;108;2;3,1;18,7;0,5;1,5;14
+640;Jaja gotowane;109;9,8;7,6;0,5;0;0;14
+641;Jaja sadzone;168;9,9;14,2;0,6;0;0;14
+642;Jajecznica;119;9,8;8,7;0,5;0;0;14
+643;Kotlety z jaj, smażone;277;8,1;22,8;10,8;0,2;0,5;14
+644;Omlet biszkoptowy ze szpinakiem;142;5,9;9,7;9,3;0,2;2,4;14
+645;Gruszki w sosie waniliowym;155;1,6;1,1;34,8;25,6;1,4;14
+646;Jabłka pieczone;96;0,3;1,6;20,8;13,7;1,6;14
+647;Jabłka w kruchym cieście;351;4,4;17,4;45;16,9;1,7;14
+648;Kisiel porzeczkowy;102;0,3;0,1;25,7;17,7;2;14
+649;Kisiel waniliowy;121;3,3;4,5;16,6;9,1;0;14
+650;Kompot z jabłek;53;0,2;0,1;13,2;9,9;1;14
+651;Kompot z wiśni;70;0,2;0,1;16,9;14,2;0,3;14
+652;Mus jabłkowy;126;2,2;0,2;28,7;24,8;0,8;14
+653;Truskawki w galaretce;128;15,4;0,2;16,1;13,8;0,6;14
+654;Truskawki z bitą śmietaną ;129;1,1;10,4;8,6;4,1;0,9;14

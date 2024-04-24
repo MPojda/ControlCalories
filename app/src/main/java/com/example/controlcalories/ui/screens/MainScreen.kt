@@ -74,7 +74,6 @@ fun MainScreen(
     navController: NavHostController
 ) {
     val meals by viewModel.meals.collectAsState()
-    val expandedMeals by viewModel.expandedMeals.collectAsState(initial = mapOf<Int, Boolean>())
 
     Column(
         modifier = modifier
@@ -93,7 +92,6 @@ fun MainScreen(
                     .size(150.dp)
             )
 
-            // Użyj Box jako kontenera dla IconButton, aby ustawić tło i kształt
             Box(
                 modifier = Modifier
                     .align(Alignment.TopStart)
@@ -110,7 +108,7 @@ fun MainScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Powrót",
+                        contentDescription = "Back",
                         tint = Color.White
                     )
                 }
@@ -122,13 +120,13 @@ fun MainScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            WeekdayButton(text = "Pon", onClick = { /* Handle button click */ })
-            WeekdayButton(text = "Wt", onClick = { /* Handle button click */ })
-            WeekdayButton(text = "Śr", onClick = { /* Handle button click */ })
-            WeekdayButton(text = "Czw", onClick = { /* Handle button click */ })
-            WeekdayButton(text = "Pt", onClick = { /* Handle button click */ })
-            WeekdayButton(text = "Sob", onClick = { /* Handle button click */ })
-            WeekdayButton(text = "Ndz", onClick = { /* Handle button click */ })
+            WeekdayButton(text = "Pon", onClick = { /* Handle button click */ }, viewModel = viewModel)
+            WeekdayButton(text = "Wt", onClick = { /* Handle button click */ }, viewModel = viewModel)
+            WeekdayButton(text = "Śr", onClick = { /* Handle button click */ }, viewModel = viewModel)
+            WeekdayButton(text = "Czw", onClick = { /* Handle button click */ }, viewModel = viewModel)
+            WeekdayButton(text = "Pt", onClick = { /* Handle button click */ }, viewModel = viewModel)
+            WeekdayButton(text = "Sob", onClick = { /* Handle button click */ }, viewModel = viewModel)
+            WeekdayButton(text = "Ndz", onClick = { /* Handle button click */ }, viewModel = viewModel)
         }
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -160,11 +158,17 @@ fun MainScreen(
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
-            CategoryButton(navController = navController) // Umieszczamy przycisk do wyboru kategorii
 
-            // Reszta UI, np. przyciski dodawania posiłków
-            Spacer(modifier = Modifier.height(16.dp))
+        Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                itemsIndexed(meals) { index, meal ->
+                    MealItem(
+                        meal = meal,
+                        navController = navController
+                    )
+                }
+            }
+
             Button(
                 onClick = { viewModel.addMeal() },
                 modifier = Modifier
@@ -180,184 +184,40 @@ fun MainScreen(
 }
 
 @Composable
-fun CategoryButton(navController: NavHostController) {
-    Button(
-        onClick = { navController.navigate("categories") },
+fun MealItem(
+    meal: String,
+    navController: NavHostController
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        colors = buttonColors(containerColor = defaultButtonColor)
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text("Wybierz kategorię", color = Color.White)
-    }
-}
+        Text(text = meal, style = Typography.titleSmall)
 
-@Composable
-fun CategoryItem(category: ProductCategory, viewModel: MainViewModel, isExpanded: Boolean) {
-    // Logika dla rozwijania/zwiń kategorii
-    Column(modifier = Modifier
-        .clickable {
-            viewModel.toggleCategoryExpansion(category.id)
-        }
-        .padding(8.dp)
-    ) {
-        Text(text = category.name, style = Typography.labelSmall)
-        AnimatedVisibility(visible = isExpanded) {
-        }
-    }
-}
-
-@Composable
-fun QuantityInputDialog(viewModel: MainViewModel) {
-    val weightText = remember { mutableStateOf("") }
-
-    // Pobierz wybrany produkt z ViewModel
-    val selectedProduct = viewModel.selectedProduct.collectAsState().value
-
-    // Jeżeli nie ma wybranego produktu, nie pokazuj dialogu
-    if (selectedProduct == null || !viewModel.showQuantityDialog.collectAsState().value) {
-        return
-    }
-
-    Dialog(onDismissRequest = { viewModel.toggleQuantityDialog(false) }) {
-        Surface(
-            shape = MaterialTheme.shapes.medium, // Zaokrąglone rogi
-            shadowElevation = 8.dp // Cień dialogu
+        IconButton(
+            onClick = { navController.navigate("categories") },
+            modifier = Modifier
+                .size(48.dp)
+                .background(defaultButtonColor, shape = CircleShape)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(all = 16.dp) // Dodaj padding wewnątrz dialogu
-                    .wrapContentSize() // Rozmiar wg zawartości
-            ) {
-                Text(
-                    text = "Podaj ilość dla produktu ${selectedProduct.name}",
-                    style = Typography.labelSmall
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    value = weightText.value,
-                    onValueChange = { newText ->
-                        if (newText.all { it.isDigit() || it == '.' }) {
-                            weightText.value = newText
-                        }
-                    },
-                    label = { Text("Ilość (w gramach)") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        // Konwertuj tekst na liczbę i dodaj produkt
-                        weightText.value.toFloatOrNull()?.let { weight ->
-                            if (weight > 0) {
-                                viewModel.addUserProduct(weight, selectedProduct.categoryId)
-                                viewModel.toggleQuantityDialog(false) // Zamknij dialog
-                            } else {
-                                // Obsłuż błąd: wprowadzono nieprawidłową wagę
-                                // Można wyświetlić jakiś komunikat błędu itp.
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth() // Przycisk na całą szerokość
-                ) {
-                    Text("Dodaj")
-                }
-            }
-        }
-    }
-}
-@Composable
-fun CategoriesDialog(viewModel: MainViewModel, onCategorySelected: (Int) -> Unit) {
-    Dialog(onDismissRequest = { viewModel.toggleCategoryDialog(false) }) {
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(Color.White)
-                    .padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Wybierz kategorię",
-                    style = Typography.labelLarge,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                val categories = viewModel.categories.collectAsState().value
-                LazyColumn {
-                    items(categories) { category ->
-                        CategoryListItem(category = category, onCategorySelected = onCategorySelected)
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(defaultButtonColor)
-                        .clickable { viewModel.toggleCategoryDialog(false) }
-                        .padding(12.dp)
-                ) {
-                    Text(
-                        "Anuluj",
-                        modifier = Modifier.fillMaxWidth(),
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        style = Typography.labelMedium
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun CategoryListItem(category: ProductCategory, onCategorySelected: (Int) -> Unit) {
-    Text(
-        text = category.name,
-        modifier = Modifier
-            .clickable { onCategorySelected(category.id) }
-            .padding(10.dp),
-        style = MaterialTheme.typography.titleSmall
-    )
-}
-@Composable
-fun ProductList(categoryId: Int, viewModel: MainViewModel) {
-    val products = viewModel.products.collectAsState().value.filter { it.categoryId == categoryId }
-    LazyColumn {
-        items(products) { product ->
-            ProductItem(product = product, viewModel = viewModel)
-        }
-    }
-}
-@Composable
-fun ProductItem(product: Product, viewModel: MainViewModel) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable {
-                viewModel.selectProduct(product)
-                viewModel.toggleQuantityDialog(true)
-            },
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = product.name,
-                style = Typography.labelMedium,
-                modifier = Modifier.weight(1f)
-            )
-            Text(
-                text = "${product.calories} kcal",
-                style = Typography.labelMedium
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Dodaj kategorię",
+                tint = Color.White
             )
         }
     }
 }
+
+
+
+
+
+
+
+
+
 
