@@ -19,6 +19,13 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.15.sp
     ),
+    labelMedium = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.sp,
+        color = Color.Black
+    ),
     labelLarge = TextStyle(
         fontWeight = FontWeight.SemiBold,
         fontSize = 22.sp,

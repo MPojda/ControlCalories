@@ -2,11 +2,8 @@ package com.example.controlcalories.data.model.dto
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Embedded
 import androidx.room.Insert
-import androidx.room.Junction
 import androidx.room.Query
-import androidx.room.Relation
 import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -32,4 +29,7 @@ interface MealDao {
     @Transaction
     @Query("SELECT * FROM user_products WHERE mealId = :mealId")
     fun getProductsForMeal(mealId: Int): Flow<List<UserProduct>>
+
+    @Query("SELECT * FROM meals WHERE dateAdded BETWEEN :startOfDay AND :endOfDay")
+    fun getMealsByDate(startOfDay: Long, endOfDay: Long): Flow<List<Meal>>
 }

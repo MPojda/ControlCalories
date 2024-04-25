@@ -8,7 +8,8 @@ data class Meal(
     @PrimaryKey(autoGenerate = true) val mealId: Int = 0,
     val name: String,
     val dayOfWeek: String,
-    val mealNumber: Int
+    val mealNumber: Int,
+    val dateAdded: Long = System.currentTimeMillis()
 )
 
 @Entity(tableName = "user_products")

@@ -21,4 +21,7 @@ interface UserProductDao {
 
     @Query("SELECT * FROM user_products ORDER BY addedDate DESC")
     fun getAllUserProducts(): Flow<List<UserProduct>>
+
+    @Query("SELECT * FROM user_products WHERE mealId = :mealId ORDER BY addedDate DESC")
+    fun getProductsFromMeal(mealId: Int): Flow<List<UserProduct>>
 }

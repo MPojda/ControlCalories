@@ -2,7 +2,7 @@ package com.example.controlcalories
 
 import android.app.Application
 import android.content.Context
-import android.text.format.DateUtils.isToday
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.controlcalories.data.model.domain.calculateAge
@@ -13,13 +13,14 @@ import com.example.controlcalories.data.model.dto.Product
 import com.example.controlcalories.data.model.dto.ProductCategory
 import com.example.controlcalories.data.model.dto.ProductDatabase
 import com.example.controlcalories.data.model.dto.UserProduct
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.Calendar
 import kotlin.math.roundToInt
 
@@ -28,16 +29,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val productDao = database.productDao()
     private val userProductDao = database.userProductDao()
     private val mealDao = database.mealDao()
-
-
     private val sharedPreferences = app.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
     var categories = MutableStateFlow<List<ProductCategory>>(emptyList())
 
     private val _selectedCategoryId = MutableStateFlow<Int?>(null)
-    val selectedCategoryId = _selectedCategoryId.asStateFlow()
-
-    val showCategoryDialog = MutableStateFlow(false)
 
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products
@@ -46,20 +42,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val selectedProduct: StateFlow<Product?> = _selectedProduct.asStateFlow()
 
 
-    private val _expandedMeals = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
-    val expandedMeals: StateFlow<Map<Int, Boolean>> = _expandedMeals
-
-    private val _meals = MutableStateFlow<List<String>>(listOf("Posiłek 1"))
+    private val _meals = MutableStateFlow<List<String>>(emptyList())
     val meals: StateFlow<List<String>> = _meals
 
-    private val _expandedCategoryId = MutableStateFlow<Int?>(null)
-    val expandedCategoryId: StateFlow<Int?> = _expandedCategoryId
-
-    val showDialog = MutableStateFlow(false)
-    val showProductDialog = MutableStateFlow(false)
-    val showQuantityDialog = MutableStateFlow(false)
-    val selectedCategory = MutableStateFlow<ProductCategory?>(null)
-    val productQuantity = MutableStateFlow("")
 
     var showErrorAlert = MutableStateFlow(false)
     var gender = MutableStateFlow("")
@@ -100,6 +85,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             else -> false
         }
     }
+
+
     private fun mapDayOfWeekToString(dayOfWeekNumber: Int): String {
         return when(dayOfWeekNumber) {
             Calendar.MONDAY -> "Pon"
@@ -115,8 +102,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun loadProducts() {
         viewModelScope.launch {
-            productDao.getAllProducts().collectLatest { productList ->
-                _products.value = productList
+            try {
+                productDao.getAllProducts().collectLatest { productList ->
+                    _products.value = productList
+                }
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error loading products: ${e.message}")
+                showErrorAlert.value = true
             }
         }
     }
@@ -146,12 +138,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val dayOfWeekString = mapDayOfWeekToString(dayOfWeekNumber)
         val nextMealNumber = _meals.value.size + 1
         val newMealName = "Posiłek $nextMealNumber"
-        _meals.value = _meals.value + newMealName
 
         viewModelScope.launch {
             val meal = Meal(name = newMealName, dayOfWeek = dayOfWeekString, mealNumber = nextMealNumber)
             val mealId = mealDao.insertMeal(meal).toInt()
-
             val newUserProduct = UserProduct(
                 name = newMealName,
                 calories = 0.0,
@@ -164,8 +154,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 categoryId = 0,
                 mealId = mealId
             )
-
             userProductDao.insert(newUserProduct)
+            loadTodayMeals()
         }
     }
 
@@ -274,18 +264,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun addUserProduct(weight: Float, categoryId: Int) {
+    fun addUserProduct(weight: Float, categoryId: Int, onProductAdded: () -> Unit) {
         val product = _selectedProduct.value
         if (product != null && weight > 0) {
             val userProduct = UserProduct(
                 id = 0,
                 name = product.name,
-                ((product.calories * weight / 100) * 10).roundToInt() / 10.0,
-                ((product.protein * weight / 100) * 10).roundToInt() / 10.0,
-                ((product.fat * weight / 100) * 10).roundToInt() / 10.0,
-                ((product.carbohydrates * weight / 100) * 10).roundToInt() / 10.0,
-                ((product.sugar * weight / 100) * 10).roundToInt() / 10.0,
-                ((product.fiber * weight / 100) * 10).roundToInt() / 10.0,
+                calories = (product.calories * weight / 100 * 10).roundToInt() / 10.0,
+                protein = (product.protein * weight / 100 * 10).roundToInt() / 10.0,
+                fat = (product.fat * weight / 100 * 10).roundToInt() / 10.0,
+                carbohydrates = (product.carbohydrates * weight / 100 * 10).roundToInt() / 10.0,
+                sugar = (product.sugar * weight / 100 * 10).roundToInt() / 10.0,
+                fiber = (product.fiber * weight / 100 * 10).roundToInt() / 10.0,
                 addedDate = System.currentTimeMillis(),
                 weight = weight,
                 categoryId = categoryId,
@@ -294,9 +284,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
             viewModelScope.launch {
                 userProductDao.insert(userProduct)
+                onProductAdded()
             }
-
-            _selectedProduct.value = null
         }
     }
 
@@ -306,9 +295,50 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun selectProduct(product: Product) {
         _selectedProduct.value = product
     }
+    fun getStartAndEndOfDay(): Pair<Long, Long> {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfDay = calendar.timeInMillis
 
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+        val endOfDay = calendar.timeInMillis
 
+        return Pair(startOfDay, endOfDay)
+    }
 
+    fun loadTodayMeals() {
+        val (startOfDay, endOfDay) = getStartAndEndOfDay()
+        viewModelScope.launch {
+            mealDao.getMealsByDate(startOfDay, endOfDay).collect { meals ->
+                _meals.value = meals.map { it.name }
+            }
+        }
+    }
+    fun updateProductWeight(userProduct: UserProduct, newWeight: Float) {
+        viewModelScope.launch {
+            val updatedProduct = userProduct.copy(weight = newWeight)
+            userProductDao.update(updatedProduct)
+        }
+    }
+
+    fun deleteProductFromMeal(userProduct: UserProduct) {
+        viewModelScope.launch {
+            userProductDao.delete(userProduct)
+        }
+    }
+
+    fun getProductsFromMeal(mealId: Int): Flow<List<UserProduct>> {
+        return userProductDao.getProductsFromMeal(mealId)
+    }
+    fun getProductsByCategory(categoryId: Int): Flow<List<Product>> {
+        return productDao.getProductsByCategory(categoryId)
+    }
 }
 
 

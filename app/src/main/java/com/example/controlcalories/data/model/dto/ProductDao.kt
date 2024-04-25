@@ -15,7 +15,7 @@ interface ProductDao {
     @Query("SELECT * FROM product_table")
     fun getAllProducts(): Flow<List<Product>>
 
-    @Query("SELECT * FROM product_table WHERE uid = :productId")
+    @Query("SELECT * FROM product_table WHERE id = :productId")
     fun getProductById(productId: Int): Flow<Product?>
 
     @Delete
@@ -30,6 +30,6 @@ interface ProductDao {
     @Query("SELECT COUNT(*) FROM product_table")
     fun getTableSize() : Int
 
-    @Query("SELECT * FROM user_products WHERE categoryId = :categoryId")
-    fun getProductsByCategory(categoryId: Int): Flow<List<UserProduct>>
+    @Query("SELECT * FROM product_table WHERE categoryId = :categoryId")
+    fun getProductsByCategory(categoryId: Int): Flow<List<Product>>
 }

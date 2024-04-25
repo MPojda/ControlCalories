@@ -17,7 +17,7 @@ class ProductLoader(private val context: Context) {
                         val tokens = line.split(";")
                         if (tokens.size >= 9) {
                             val product = Product(
-                                uid = tokens[0].toInt(),
+                                id = tokens[0].toInt(),
                                 name = tokens[1],
                                 calories = tokens[2].toIntOrNull() ?: 0,
                                 protein = tokens[3].replace(',', '.').toFloatOrNull() ?: 0f,

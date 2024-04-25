@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,10 +30,10 @@ fun ProductListScreen(
     viewModel: MainViewModel,
     navController: NavHostController
 ) {
-    val products = viewModel.products.collectAsState().value.filter { it.categoryId == categoryId }
+    val products by viewModel.getProductsByCategory(categoryId).collectAsState(initial = listOf())
 
     LazyColumn {
-        items(products) { product ->
+        items(products, key = { product -> product.id }) { product ->
             ProductItem(product = product, onSelectProduct = {
                 viewModel.selectProduct(product)
                 navController.navigate("QuantityInput")

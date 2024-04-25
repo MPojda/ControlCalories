@@ -15,6 +15,7 @@ import com.example.controlcalories.data.model.dto.ProductDatabase
 import com.example.controlcalories.ui.screens.CategoriesScreen
 import com.example.controlcalories.ui.screens.BmiScreen
 import com.example.controlcalories.ui.screens.MainScreen
+import com.example.controlcalories.ui.screens.MealDetailScreen
 import com.example.controlcalories.ui.screens.ProductListScreen
 import com.example.controlcalories.ui.screens.QuantityInputScreen
 import com.example.controlcalories.ui.screens.StartScreen
@@ -66,20 +67,23 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel) {
             MainScreen(viewModel = viewModel, navController = navController)
         }
 
-        // Dodanie trasy dla ekranu dodawania produktu
+
         composable("categories") {
             CategoriesScreen(viewModel = viewModel, navController = navController)
         }
 
-        // Dodanie trasy dla listy produktów z daną kategorią
         composable("productList/{categoryId}") { backStackEntry ->
-            val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull() ?: 0
+            val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull() ?: throw IllegalArgumentException("Category ID is required")
             ProductListScreen(categoryId = categoryId, viewModel = viewModel, navController = navController)
         }
 
-        // Dodanie trasy dla ekranu wprowadzania wagi produktu
+
         composable("quantityInput") {
             QuantityInputScreen(viewModel = viewModel, navController = navController)
+        }
+        composable("mealDetails") { backStackEntry ->
+            val mealId = backStackEntry.arguments?.getString("mealId")?.toIntOrNull() ?: 0
+            MealDetailScreen(viewModel = viewModel, mealId = mealId, navController = navController)
         }
     }
 }

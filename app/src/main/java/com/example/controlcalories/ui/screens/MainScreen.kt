@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
@@ -40,6 +42,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -74,101 +77,97 @@ fun MainScreen(
     navController: NavHostController
 ) {
     val meals by viewModel.meals.collectAsState()
-
-    Column(
+    LaunchedEffect(Unit) {
+        viewModel.loadTodayMeals()
+    }
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(150.dp)
-            )
-
+        item {
             Box(
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(start = 4.dp)
-                    .clip(CircleShape)
-                    .background(defaultButtonColor)
-                    .size(48.dp)
+                    .fillMaxWidth()
             ) {
-                IconButton(
-                    onClick = { navController.navigate("bmi") },
-
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Logo",
                     modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(150.dp)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(start = 4.dp)
+                        .clip(CircleShape)
+                        .background(defaultButtonColor)
                         .size(48.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White
-                    )
+                    IconButton(
+                        onClick = { navController.navigate("bmi") },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            WeekdayButton(text = "Pon", onClick = { /* Handle button click */ }, viewModel = viewModel)
-            WeekdayButton(text = "Wt", onClick = { /* Handle button click */ }, viewModel = viewModel)
-            WeekdayButton(text = "Śr", onClick = { /* Handle button click */ }, viewModel = viewModel)
-            WeekdayButton(text = "Czw", onClick = { /* Handle button click */ }, viewModel = viewModel)
-            WeekdayButton(text = "Pt", onClick = { /* Handle button click */ }, viewModel = viewModel)
-            WeekdayButton(text = "Sob", onClick = { /* Handle button click */ }, viewModel = viewModel)
-            WeekdayButton(text = "Ndz", onClick = { /* Handle button click */ }, viewModel = viewModel)
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 74.dp)
-        ) {
-            Text(
-                text = "B",
-                color = Color.Black,
-                fontSize = 24.sp,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-            Text(
-                text = "T",
-                color = Color.Black,
-                fontSize = 24.sp,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-            Text(
-                text = "W",
-                color = Color.Black,
-                fontSize = 24.sp,
-                modifier = Modifier.padding(start = 8.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-        Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
-            LazyColumn(modifier = Modifier.weight(1f)) {
-                itemsIndexed(meals) { index, meal ->
-                    MealItem(
-                        meal = meal,
-                        navController = navController
-                    )
-                }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                WeekdayButton(text = "Pon", onClick = { /* Handle button click */ }, viewModel = viewModel)
+                WeekdayButton(text = "Wt", onClick = { /* Handle button click */ }, viewModel = viewModel)
+                WeekdayButton(text = "Śr", onClick = { /* Handle button click */ }, viewModel = viewModel)
+                WeekdayButton(text = "Czw", onClick = { /* Handle button click */ }, viewModel = viewModel)
+                WeekdayButton(text = "Pt", onClick = { /* Handle button click */ }, viewModel = viewModel)
+                WeekdayButton(text = "Sob", onClick = { /* Handle button click */ }, viewModel = viewModel)
+                WeekdayButton(text = "Ndz", onClick = { /* Handle button click */ }, viewModel = viewModel)
             }
+            Spacer(modifier = Modifier.height(16.dp))
 
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 74.dp)
+            ) {
+                Text(
+                    text = "B",
+                    color = Color.Black,
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(
+                    text = "T",
+                    color = Color.Black,
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                Text(
+                    text = "W",
+                    color = Color.Black,
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        items(meals) { meal ->
+            MealItem(meal = meal, navController = navController)
+        }
+
+        item {
             Button(
                 onClick = { viewModel.addMeal() },
                 modifier = Modifier
@@ -179,7 +178,6 @@ fun MainScreen(
                 Text("Dodaj posiłek", color = Color.White)
             }
         }
-
     }
 }
 
@@ -195,20 +193,35 @@ fun MealItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = meal, style = Typography.titleSmall)
-
-        IconButton(
-            onClick = { navController.navigate("categories") },
-            modifier = Modifier
-                .size(48.dp)
-                .background(defaultButtonColor, shape = CircleShape)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Dodaj kategorię",
-                tint = Color.White
-            )
+        Text(text = meal, style = Typography.labelMedium)
+        Row {
+            IconButton(
+                onClick = { navController.navigate("categories") },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(defaultButtonColor, shape = CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Dodaj produkt",
+                    tint = Color.White
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            IconButton(
+                onClick = { navController.navigate("mealDetails") },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(defaultButtonColor, shape = CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edytuj posiłek",
+                    tint = Color.White
+                )
+            }
         }
+
     }
 }
 

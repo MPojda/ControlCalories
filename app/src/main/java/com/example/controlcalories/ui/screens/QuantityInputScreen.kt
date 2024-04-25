@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -38,89 +39,84 @@ import com.example.controlcalories.ui.theme.defaultButtonColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuantityInputScreen(viewModel: MainViewModel, navController: NavHostController) {
+fun QuantityInputScreen(
+    viewModel: MainViewModel,
+    navController: NavHostController
+) {
     val selectedProduct = viewModel.selectedProduct.collectAsState().value
     val weightText = remember { mutableStateOf("") }
     val isWeightValid = remember(weightText.value) {
         weightText.value.toFloatOrNull()?.let { it > 0 } ?: false
     }
+    val addingProduct = remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .size(200.dp, 200.dp)
+                modifier = Modifier.size(200.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "${selectedProduct?.name}",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 22.sp,
-                    color = Color.White
-                ),
+                text = selectedProduct?.name ?: "Wybierz produkt...",
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 22.sp, color = Color.White),
                 modifier = Modifier
                     .padding(16.dp)
                     .background(color = defaultButtonColor, shape = RoundedCornerShape(8.dp))
                     .padding(16.dp)
             )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                        .background(color = defaultButtonColor, shape = RoundedCornerShape(8.dp))
-                        .clip(RoundedCornerShape(8.dp)),
-                    value = weightText.value,
-                    onValueChange = { weightText.value = it },
-                    label = { Text("Waga (w gramach)", color = Color.White) },
-                    isError = !isWeightValid,
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = Color.White,
-                        focusedBorderColor = Color.White,
-                        cursorColor = Color.White,
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = weightText.value,
+                onValueChange = { weightText.value = it },
+                label = { Text("Waga (w gramach)", color = Color.White) },
+                isError = !isWeightValid,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    unfocusedBorderColor = Color.White,
+                    focusedBorderColor = Color.White,
+                    cursorColor = Color.White,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                    .background(color = defaultButtonColor, shape = RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(8.dp))
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            if (addingProduct.value) {
+                CircularProgressIndicator(color = Color.White)
+            } else {
                 Button(
                     onClick = {
                         if (isWeightValid) {
+                            addingProduct.value = true
                             viewModel.addUserProduct(
                                 weightText.value.toFloat(),
                                 selectedProduct?.categoryId ?: 0
-                            )
-                            navController.popBackStack()
+                            ) {
+                                navController.popBackStack()
+                                addingProduct.value = false
+                            }
                         }
                     },
                     enabled = isWeightValid,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = defaultButtonColor,
-                        disabledContainerColor = defaultButtonColor
-                    )
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = defaultButtonColor)
                 ) {
-                    Text(
-                        text = "Dodaj produkt do posiłku",
-                        color = Color.White
-                    )
+                    Text("Dodaj produkt do posiłku", color = Color.White)
                 }
             }
         }
     }
-
-
+}
 
 
 
