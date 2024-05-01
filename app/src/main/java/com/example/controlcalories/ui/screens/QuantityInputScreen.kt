@@ -1,5 +1,6 @@
 package com.example.controlcalories.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +50,17 @@ fun QuantityInputScreen(
     val isWeightValid = remember(weightText.value) {
         weightText.value.toFloatOrNull()?.let { it > 0 } ?: false
     }
+    val currentMealId = viewModel.currentMealId.collectAsState().value
+
+    LaunchedEffect(weightText.value) {
+        Log.d("Debug", "Weight text: ${weightText.value}")
+        Log.d("Debug", "Weight is valid: $isWeightValid")
+    }
+
+    LaunchedEffect(currentMealId) {
+        Log.d("Debug", "Current meal ID: $currentMealId")
+    }
+
     val addingProduct = remember { mutableStateOf(false) }
 
     Box(
@@ -96,18 +109,22 @@ fun QuantityInputScreen(
             } else {
                 Button(
                     onClick = {
-                        if (isWeightValid) {
+                        if (isWeightValid && selectedProduct != null && currentMealId != null) {
                             addingProduct.value = true
                             viewModel.addUserProduct(
-                                weightText.value.toFloat(),
-                                selectedProduct?.categoryId ?: 0
-                            ) {
-                                navController.popBackStack()
-                                addingProduct.value = false
-                            }
+                                weight = weightText.value.toFloat(),
+                                categoryId = selectedProduct.categoryId,
+                                mealId = currentMealId,
+                                onProductAdded = {
+                                    navController.popBackStack()
+                                    addingProduct.value = false
+                                }
+                            )
+                        } else {
+                            Log.d("Debug", "Cannot add product: Check product selection, weight, or meal ID.")
                         }
                     },
-                    enabled = isWeightValid,
+                    enabled = isWeightValid && selectedProduct != null && currentMealId != null,
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = defaultButtonColor)
                 ) {

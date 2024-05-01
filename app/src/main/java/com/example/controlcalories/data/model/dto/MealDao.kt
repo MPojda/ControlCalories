@@ -13,8 +13,8 @@ interface MealDao {
     @Insert
     suspend fun insertMeal(meal: Meal): Long
 
-    @Delete
-    suspend fun deleteMeal(meal: Meal)
+    @Query("DELETE FROM meals WHERE mealId = :mealId")
+    suspend fun deleteMeal(mealId: Int)
 
     @Update
     suspend fun updateProductInMeal(product: UserProduct)
@@ -30,6 +30,14 @@ interface MealDao {
     @Query("SELECT * FROM user_products WHERE mealId = :mealId")
     fun getProductsForMeal(mealId: Int): Flow<List<UserProduct>>
 
-    @Query("SELECT * FROM meals WHERE dateAdded BETWEEN :startOfDay AND :endOfDay")
-    fun getMealsByDate(startOfDay: Long, endOfDay: Long): Flow<List<Meal>>
+    @Query("SELECT * FROM meals WHERE dateFor BETWEEN :startOfDay AND :endOfDay")
+    fun getMealsByDate(startOfDay: String, endOfDay: String): Flow<List<Meal>>
+
+    @Transaction
+    @Query("SELECT * FROM meals WHERE mealId = :mealId")
+    fun getMealWithProducts(mealId: Int): Flow<List<Meal>>
+
+    @Query("SELECT * FROM meals WHERE mealId = :mealId")
+    fun getMealById(mealId: Int): Flow<List<Meal>>
 }
+

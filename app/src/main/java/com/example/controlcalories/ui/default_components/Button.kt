@@ -29,9 +29,3 @@ fun Button(
         Text(text = text, style = textStyle, color = Color.White)
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun ButtonPreview() {
-    Button(text = "Check")
-}

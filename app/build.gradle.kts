@@ -79,6 +79,7 @@ dependencies {
     implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$compose_version")
     implementation ("androidx.compose.runtime:runtime:$compose_version")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
+    implementation("androidx.compose.material:material:1.0.5")
 
     // AndroidX
     implementation("androidx.core:core-ktx:1.12.0")

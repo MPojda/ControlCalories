@@ -9,7 +9,7 @@ data class Meal(
     val name: String,
     val dayOfWeek: String,
     val mealNumber: Int,
-    val dateAdded: Long = System.currentTimeMillis()
+    val dateFor: String
 )
 
 @Entity(tableName = "user_products")
@@ -22,11 +22,19 @@ data class UserProduct(
     val carbohydrates: Double,
     val sugar: Double,
     val fiber: Double,
-    val addedDate: Long = System.currentTimeMillis(),
+    val dateFor: String,
     val weight: Float,
     val categoryId: Int,
     val mealId: Int
 )
+
+data class TotalsForDay(
+    val totalCalories: Double,
+    val totalProtein: Double,
+    val totalFat: Double,
+    val totalCarbohydrates: Double
+)
+
 
 @Entity(primaryKeys = ["mealId", "productId"])
 data class MealProductCrossRef(

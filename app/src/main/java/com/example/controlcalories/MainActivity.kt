@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.controlcalories.data.model.dto.ProductDao
 import com.example.controlcalories.data.model.dto.ProductDatabase
+import com.example.controlcalories.data.model.dto.UserProductDao
 import com.example.controlcalories.ui.screens.CategoriesScreen
 import com.example.controlcalories.ui.screens.BmiScreen
 import com.example.controlcalories.ui.screens.MainScreen
@@ -23,6 +24,8 @@ import com.example.controlcalories.ui.theme.ControlCaloriesTheme
 
 class MainActivity : ComponentActivity() {
     private lateinit var productDao: ProductDao
+    private lateinit var userProductDao: UserProductDao
+
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,7 @@ class MainActivity : ComponentActivity() {
 
         val productDatabase = ProductDatabase.getInstance(applicationContext)
         productDao = productDatabase.productDao()
+        userProductDao = productDatabase.userProductDao()
 
         setContent {
             val navController = rememberNavController()
@@ -37,7 +41,8 @@ class MainActivity : ComponentActivity() {
                 NavigationHost(navController = navController, viewModel = viewModel)
             }
         }
-        Repository(context = applicationContext)
+
+        Repository(productDao, applicationContext)
     }
 }
 
@@ -81,7 +86,7 @@ fun NavigationHost(navController: NavHostController, viewModel: MainViewModel) {
         composable("quantityInput") {
             QuantityInputScreen(viewModel = viewModel, navController = navController)
         }
-        composable("mealDetails") { backStackEntry ->
+        composable("mealDetails/{mealId}") { backStackEntry ->
             val mealId = backStackEntry.arguments?.getString("mealId")?.toIntOrNull() ?: 0
             MealDetailScreen(viewModel = viewModel, mealId = mealId, navController = navController)
         }
