@@ -101,6 +101,3 @@ fun StartScreen(
         }
     }
 }
-
-
-

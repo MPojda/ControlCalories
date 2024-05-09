@@ -9,6 +9,7 @@ import com.example.controlcalories.data.model.domain.calculateAge
 import com.example.controlcalories.data.model.domain.calculateBMI
 import com.example.controlcalories.data.model.domain.getBMICategory
 import com.example.controlcalories.data.model.dto.Meal
+import com.example.controlcalories.data.model.dto.MealWithProducts
 import com.example.controlcalories.data.model.dto.Product
 import com.example.controlcalories.data.model.dto.ProductCategory
 import com.example.controlcalories.data.model.dto.ProductDatabase
@@ -19,13 +20,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 import kotlin.math.round
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
@@ -34,20 +34,28 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val userProductDao = database.userProductDao()
     private val mealDao = database.mealDao()
     private val sharedPreferences = app.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-    val totalsForDay: Flow<TotalsForDay> = userProductDao.getTotalsForDay(getTodayDateString())
+    private val _selectedDate = MutableStateFlow(LocalDate.now().toString())
+    val selectedDate: StateFlow<String> = _selectedDate
+    val totalsForDay: Flow<TotalsForDay> = selectedDate.flatMapLatest { selectedDate ->
+        userProductDao.getTotalsForDay(selectedDate)
+    }
     var categories = MutableStateFlow<List<ProductCategory>>(emptyList())
     private val _selectedCategoryId = MutableStateFlow<Int?>(null)
+
+    private val _mealDates = MutableStateFlow<List<String>>(emptyList())
+    val mealDates: StateFlow<List<String>> = _mealDates
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products
     private val _currentMealId = MutableStateFlow<Int?>(null)
     val currentMealId: StateFlow<Int?> = _currentMealId.asStateFlow()
     private val _selectedProduct = MutableStateFlow<Product?>(null)
     val selectedProduct: StateFlow<Product?> = _selectedProduct.asStateFlow()
-    private val _meals = MutableStateFlow<List<Pair<Int, String>>>(emptyList())
-    val meals: StateFlow<List<Pair<Int, String>>> = _meals
-    private val _mealsByDay =
-        MutableStateFlow<Map<String, MutableList<Pair<Int, String>>>>(emptyMap())
-    val mealsByDay: StateFlow<Map<String, List<Pair<Int, String>>>> = _mealsByDay
+    private val _meals = MutableStateFlow<List<Pair<Int, Int>>>(emptyList())
+    val meals: StateFlow<List<Pair<Int, Int>>> = _meals
+    private val _mealsByDay = MutableStateFlow<Map<String, MutableList<Pair<Int, Int>>>>(emptyMap())
+    val mealsByDay: StateFlow<Map<String, List<Pair<Int, Int>>>> = _mealsByDay
+    private val _mealsWithProducts = MutableStateFlow<List<MealWithProducts>>(emptyList())
+    val mealsWithProducts: StateFlow<List<MealWithProducts>> = _mealsWithProducts
 
     var showErrorAlert = MutableStateFlow(false)
     var gender = MutableStateFlow("")
@@ -69,122 +77,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         loadProducts()
         loadCategories()
         loadUserData()
+        loadMealDates()
     }
-
-    fun isToday(weekday: String): Boolean {
-        val calendar = Calendar.getInstance()
-        val currentWeekdayIndex = calendar.get(Calendar.DAY_OF_WEEK)
-
-        return when (weekday) {
-            "Pon" -> currentWeekdayIndex == Calendar.MONDAY
-            "Wt" -> currentWeekdayIndex == Calendar.TUESDAY
-            "Śr" -> currentWeekdayIndex == Calendar.WEDNESDAY
-            "Czw" -> currentWeekdayIndex == Calendar.THURSDAY
-            "Pt" -> currentWeekdayIndex == Calendar.FRIDAY
-            "Sob" -> currentWeekdayIndex == Calendar.SATURDAY
-            "Ndz" -> currentWeekdayIndex == Calendar.SUNDAY
-            else -> false
-        }
-    }
-
-    private fun getTodayDateString(): String {
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return formatter.format(Calendar.getInstance().time)
-    }
-
-    private fun mapDayOfWeekToString(dayOfWeekNumber: Int): String {
-        return when (dayOfWeekNumber) {
-            Calendar.MONDAY -> "Pon"
-            Calendar.TUESDAY -> "Wt"
-            Calendar.WEDNESDAY -> "Śr"
-            Calendar.THURSDAY -> "Czw"
-            Calendar.FRIDAY -> "Pt"
-            Calendar.SATURDAY -> "Sob"
-            Calendar.SUNDAY -> "Ndz"
-            else -> "Nieznany"
-        }
-    }
-
-    fun mapStringDayToInt(day: String): Int? {
-        return when (day) {
-            "Pon" -> Calendar.MONDAY
-            "Wt" -> Calendar.TUESDAY
-            "Śr" -> Calendar.WEDNESDAY
-            "Czw" -> Calendar.THURSDAY
-            "Pt" -> Calendar.FRIDAY
-            "Sob" -> Calendar.SATURDAY
-            "Ndz" -> Calendar.SUNDAY
-            else -> null
-        }
-    }
-
-    private fun loadProducts() {
-        viewModelScope.launch {
-            try {
-                productDao.getAllProducts().collectLatest { productList ->
-                    _products.value = productList
-                }
-            } catch (e: Exception) {
-                Log.e("ViewModel", "Error loading products: ${e.message}")
-                showErrorAlert.value = true
-            }
-        }
-    }
-
-    private fun loadCategories() {
-        categories.value = listOf(
-            ProductCategory(1, "Nabiał", 1, 56),
-            ProductCategory(2, "Jaja", 57, 61),
-            ProductCategory(3, "Mięso", 62, 102),
-            ProductCategory(4, "Wędliny", 103, 148),
-            ProductCategory(5, "Ryby", 149, 184),
-            ProductCategory(6, "Tłuszcze", 185, 204),
-            ProductCategory(7, "Mąka/Pieczywo", 205, 259),
-            ProductCategory(8, "Warzywa", 260, 336),
-            ProductCategory(9, "Owoce", 337, 390),
-            ProductCategory(10, "Orzechy", 391, 399),
-            ProductCategory(11, "Słodycze", 400, 457),
-            ProductCategory(12, "Soki/Napoje", 458, 476),
-            ProductCategory(13, "Chipsy/Przyprawy", 477, 479),
-            ProductCategory(14, "Dania gotowe", 480, 654)
-        )
-    }
-
-    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val dateAsString: String = LocalDate.now().format(dateFormatter)
-
-    fun addMeal() {
-        val calendar = Calendar.getInstance()
-        val dayOfWeekNumber = calendar.get(Calendar.DAY_OF_WEEK)
-        val dayOfWeekString = mapDayOfWeekToString(dayOfWeekNumber)
-        val nextMealNumber = _meals.value.size + 1
-        val newMealName = "Posiłek $nextMealNumber"
-        val currentDateStr = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-
-        viewModelScope.launch {
-            try {
-                val meal = Meal(
-                    name = newMealName,
-                    dayOfWeek = dayOfWeekString,
-                    mealNumber = nextMealNumber,
-                    dateFor = currentDateStr
-                )
-                val mealId = mealDao.insertMeal(meal).toInt()
-                Log.d("ViewModel", "Meal added successfully with ID: $mealId")
-
-                val updatedMeals = _meals.value.toMutableList()
-                updatedMeals.add(mealId to newMealName)
-                _meals.value = updatedMeals
-
-                updateMealsByDay(dayOfWeekString, mealId, newMealName)
-                loadTodayMeals()
-            } catch (e: Exception) {
-                Log.e("ViewModel", "Error adding meal: ${e.message}")
-                showErrorAlert.value = true
-            }
-        }
-    }
-
 
     private fun loadUserData() {
         val sharedPreferences =
@@ -296,7 +190,130 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun addUserProduct(weight: Float, categoryId: Int, mealId: Int, onProductAdded: () -> Unit) {
+    private fun mapDayOfWeekToString(dayOfWeekNumber: Int): String {
+        return when (dayOfWeekNumber) {
+            Calendar.MONDAY -> "Pon"
+            Calendar.TUESDAY -> "Wt"
+            Calendar.WEDNESDAY -> "Śr"
+            Calendar.THURSDAY -> "Czw"
+            Calendar.FRIDAY -> "Pt"
+            Calendar.SATURDAY -> "Sob"
+            Calendar.SUNDAY -> "Ndz"
+            else -> "Nieznany"
+        }
+    }
+
+    fun mapStringDayToInt(day: String): Int? {
+        return when (day) {
+            "Pon" -> Calendar.MONDAY
+            "Wt" -> Calendar.TUESDAY
+            "Śr" -> Calendar.WEDNESDAY
+            "Czw" -> Calendar.THURSDAY
+            "Pt" -> Calendar.FRIDAY
+            "Sob" -> Calendar.SATURDAY
+            "Ndz" -> Calendar.SUNDAY
+            else -> null
+        }
+    }
+
+    private fun loadProducts() {
+        viewModelScope.launch {
+            try {
+                productDao.getAllProducts().collectLatest { productList ->
+                    _products.value = productList
+                }
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error loading products: ${e.message}")
+                showErrorAlert.value = true
+            }
+        }
+    }
+
+    private fun loadCategories() {
+        categories.value = listOf(
+            ProductCategory(1, "Nabiał", 1, 56),
+            ProductCategory(2, "Jaja", 57, 61),
+            ProductCategory(3, "Mięso", 62, 102),
+            ProductCategory(4, "Wędliny", 103, 148),
+            ProductCategory(5, "Ryby", 149, 184),
+            ProductCategory(6, "Tłuszcze", 185, 204),
+            ProductCategory(7, "Mąka/Pieczywo", 205, 259),
+            ProductCategory(8, "Warzywa", 260, 336),
+            ProductCategory(9, "Owoce", 337, 390),
+            ProductCategory(10, "Orzechy", 391, 399),
+            ProductCategory(11, "Słodycze", 400, 457),
+            ProductCategory(12, "Soki/Napoje", 458, 476),
+            ProductCategory(13, "Chipsy/Przyprawy", 477, 479),
+            ProductCategory(14, "Dania gotowe", 480, 654)
+        )
+    }
+
+    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val dateAsString: String = LocalDate.now().format(dateFormatter)
+
+    fun addMeal(selectedDate: String) {
+        val calendar = Calendar.getInstance()
+        val dayOfWeekNumber = calendar.get(Calendar.DAY_OF_WEEK)
+        val dayOfWeekString = mapDayOfWeekToString(dayOfWeekNumber)
+
+        viewModelScope.launch {
+            try {
+                val mealsForDate = mealDao.getMealsForDate(selectedDate)
+                val nextMealNumber = mealsForDate.size + 1
+                val newMealName = "Posiłek $nextMealNumber"
+
+                val meal = Meal(
+                    name = newMealName,
+                    dayOfWeek = dayOfWeekString,
+                    mealNumber = nextMealNumber,
+                    dateFor = selectedDate
+                )
+                val mealId = mealDao.insertMeal(meal).toInt()
+                Log.d("ViewModel", "Meal added successfully with ID: $mealId")
+
+                loadMealsForDate(selectedDate)
+
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error adding meal: ${e.message}")
+                showErrorAlert.value = true
+            }
+        }
+    }
+
+    fun deleteMeal(mealId: Int, selectedDate: String) {
+        viewModelScope.launch {
+            try {
+                val mealToDelete = mealDao.getMealByID(mealId)
+
+                if (mealToDelete != null) {
+                    mealDao.deleteMeal(mealId)
+                    mealDao.deleteAllProductsForMeal(mealId)
+
+                    val remainingMeals = mealDao.getMealsWithHigherNumbers(selectedDate, mealToDelete.mealNumber)
+
+                    remainingMeals.forEachIndexed { index, meal ->
+                        mealDao.updateMealNumber(meal.mealId, mealToDelete.mealNumber + index)
+                    }
+
+                    loadMealsForDate(selectedDate)
+                } else {
+                    Log.e("ViewModel", "Meal with ID $mealId not found")
+                }
+
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error deleting meal: ${e.message}")
+                showErrorAlert.value = true
+            }
+        }
+    }
+
+    fun addUserProduct(
+        weight: Float,
+        categoryId: Int,
+        mealId: Int,
+        selectedDate: String,
+        onProductAdded: () -> Unit
+    ) {
         val product = _selectedProduct.value
         if (product != null && weight > 0) {
             val newUserProduct = UserProduct(
@@ -307,7 +324,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 carbohydrates = round((product.carbohydrates * weight / 100) * 10) / 10.0,
                 sugar = round((product.sugar * weight / 100) * 10) / 10.0,
                 fiber = round((product.fiber * weight / 100) * 10) / 10.0,
-                dateFor = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                dateFor = selectedDate,
                 weight = weight,
                 categoryId = categoryId,
                 mealId = mealId
@@ -327,43 +344,24 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _selectedProduct.value = product
     }
 
-    fun getStartAndEndOfDay(dateInMillis: Long): Pair<Long, Long> {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = dateInMillis
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        val startOfDay = calendar.timeInMillis
-
-        calendar.add(Calendar.DAY_OF_MONTH, 1)
-        calendar.add(Calendar.MILLISECOND, -1)
-        val endOfDay = calendar.timeInMillis
-
-        return Pair(startOfDay, endOfDay)
-    }
-
-    fun loadTodayMeals() {
-        val currentMillis = System.currentTimeMillis()
-        val (startOfDay, endOfDay) = getStartAndEndOfDay(currentMillis)
-
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val formattedStartOfDay = formatter.format(Date(startOfDay))
-        val formattedEndOfDay = formatter.format(Date(endOfDay))
-
-        Log.d("ViewModel", "Loading meals from $formattedStartOfDay to $formattedEndOfDay")
-
+    private fun loadMealsForDate(selectedDate: String) {
         viewModelScope.launch {
-            mealDao.getMealsByDate(formattedStartOfDay, formattedEndOfDay).collect { meals ->
-                Log.d("ViewModel", "Loaded ${meals.size} meals")
-                val newMealsMap = meals.groupBy { meal ->
+            try {
+                val mealsForDate = mealDao.getMealsForDate(selectedDate)
+
+                _meals.value = mealsForDate.map { it.mealId to it.mealNumber }
+
+                val groupedMeals = mealsForDate.groupBy { meal ->
                     mapDayOfWeekToString(mapStringDayToInt(meal.dayOfWeek) ?: return@groupBy "")
                 }.mapValues { entry ->
-                    entry.value.map { it.mealId to it.name }.toMutableList()
+                    entry.value.map { it.mealId to it.mealNumber }.toMutableList()
                 }.toMutableMap()
 
-                _mealsByDay.emit(newMealsMap)
-                _meals.emit(meals.map { it.mealId to it.name })
+                _mealsByDay.emit(groupedMeals)
+
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error loading meals: ${e.message}")
+                showErrorAlert.value = true
             }
         }
     }
@@ -404,12 +402,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun deleteMeal(mealId: Int) {
-        viewModelScope.launch {
-            mealDao.deleteMeal(mealId)
-            userProductDao.deleteProductsWithMeal(mealId)
-        }
-    }
 
     fun getProductsFromMeal(mealId: Int): Flow<List<UserProduct>> {
         return userProductDao.getProductsFromMeal(mealId)
@@ -419,43 +411,75 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         return productDao.getProductsByCategory(categoryId)
     }
 
-    fun getMealIdForDay(day: String): Int? {
-        val currentDay = when (day) {
-            "Pon" -> Calendar.MONDAY
-            "Wt" -> Calendar.TUESDAY
-            "Śr" -> Calendar.WEDNESDAY
-            "Czw" -> Calendar.THURSDAY
-            "Pt" -> Calendar.FRIDAY
-            "Sob" -> Calendar.SATURDAY
-            "Ndz" -> Calendar.SUNDAY
-            else -> return null
-        }
 
-        val dayOfWeekString = mapDayOfWeekToString(currentDay)
-        val mealsList = _mealsByDay.value[dayOfWeekString]
-
-        return mealsList?.firstOrNull()?.first
-    }
-
-    fun updateMealsByDay(dayOfWeekString: String, mealId: Int, newMealName: String) {
-        val currentMealsByDay = _mealsByDay.value.toMutableMap()
-        val mealsList = currentMealsByDay.getOrDefault(dayOfWeekString, mutableListOf())
-
-        val index = mealsList.indexOfFirst { it.first == mealId }
-        if (index != -1) {
-            mealsList[index] = Pair(mealId, newMealName)
-        } else {
-            mealsList.add(Pair(mealId, newMealName))
-        }
-        currentMealsByDay[dayOfWeekString] = mealsList
-        _mealsByDay.value = currentMealsByDay
-
-        Log.d("ViewModel", "Meals by day updated: $currentMealsByDay")
-    }
-
-    fun selectMeal(mealId: Int) {
+    fun selectMeal(mealId: Int, selectedDate: String) {
         _currentMealId.value = mealId
         Log.d("ViewModel", "Current meal ID set to $mealId")
+    }
+
+    fun getPreviousDays(): List<Pair<String, Int>> {
+        val dateFormat = SimpleDateFormat("EEE")
+        val calendar = Calendar.getInstance()
+        val days = mutableListOf<Pair<String, Int>>()
+
+        calendar.add(Calendar.DATE, -14)
+
+        for (i in 0 until 29) {
+            val dayOfWeekName = dateFormat.format(calendar.time)
+            days.add(Pair(dayOfWeekName, calendar.get(Calendar.DAY_OF_MONTH)))
+            calendar.add(Calendar.DATE, 1)
+        }
+
+        return days
+    }
+
+    fun main() {
+        val previousDays = getPreviousDays()
+        for (day in previousDays) {
+            println("${day.first}, ${day.second}")
+        }
+    }
+
+    fun updateSelectedDate(selectedDate: String) {
+        _selectedDate.value = selectedDate
+        loadMealsForDate(selectedDate)
+    }
+
+    fun isToday(dateFor: String): Boolean {
+        return dateFor == _selectedDate.value
+    }
+
+    fun calculateScrollingValuesForSelectedDate(
+        dates: List<String>,
+        selectedDate: String,
+        screenWidthPx: Float
+    ): Pair<Int, Int> {
+        val selectedIndex = dates.indexOf(selectedDate)
+
+        val centerOffset = if (selectedIndex >= 0) {
+            val itemWidthPx = screenWidthPx / dates.size
+            val itemOffsetPx = selectedIndex * itemWidthPx
+            val halfScreenWidthPx = screenWidthPx / 2
+            val centerOffset = itemOffsetPx - halfScreenWidthPx + (itemWidthPx / 2)
+            centerOffset.toInt()
+        } else {
+            0
+        }
+
+        return Pair(selectedIndex, centerOffset)
+    }
+
+    private fun loadMealDates() {
+        val today = LocalDate.now()
+        val startDate = today.minusDays(28)
+        val endDate = today.plusDays(2)
+
+        val dateList = generateSequence(startDate) { it.plusDays(1) }
+            .takeWhile { it <= endDate }
+            .map { it.toString() }
+            .toList()
+
+        _mealDates.value = dateList
     }
 
 }

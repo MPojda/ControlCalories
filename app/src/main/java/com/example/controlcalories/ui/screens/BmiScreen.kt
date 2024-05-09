@@ -1,8 +1,10 @@
 package com.example.controlcalories.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,12 +28,14 @@ import com.example.controlcalories.ui.theme.defaultErrorColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.TextStyle
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BmiScreen(
-    viewModel: MainViewModel, navController: NavHostController
+    viewModel: MainViewModel,
+    navController: NavHostController
 ) {
     val gender by viewModel.gender.collectAsState()
     val dayOfBirth by viewModel.dayOfBirth.collectAsState()
@@ -49,13 +53,16 @@ fun BmiScreen(
     val showResultDialog by viewModel.showResultDialog.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
-
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(horizontal = 10.dp, vertical = 10.dp)
     ) {
+
+        Spacer(modifier = Modifier.height(18.dp))
 
         Text(
             "Płeć:", style = Typography.labelLarge, modifier = Modifier.padding(start = 10.dp)
@@ -109,7 +116,8 @@ fun BmiScreen(
                     viewModel.updateDayOfBirth(newText)
                 },
                 isError = !isDayValid,
-                label = { Text("Dzień") },
+                label = { Text("Dzień",color = Color.Black) },
+                textStyle = Typography.labelMedium,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isDayValid) Color(0xFF4CAF50) else Color.Red,
@@ -127,7 +135,8 @@ fun BmiScreen(
                     viewModel.updateMonthOfBirth(newText)
                 },
                 isError = !isMonthValid,
-                label = { Text("Miesiąc") },
+                label = { Text("Miesiąc",color = Color.Black) },
+                textStyle = Typography.labelMedium,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isMonthValid) Color(0xFF4CAF50) else Color.Red,
@@ -145,7 +154,8 @@ fun BmiScreen(
                     viewModel.updateYearOfBirth(newText)
                 },
                 isError = !isYearValid,
-                label = { Text("Rok") },
+                label = { Text("Rok",color = Color.Black) },
+                textStyle = Typography.labelMedium,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isYearValid) Color(0xFF4CAF50) else Color.Red,
@@ -177,7 +187,8 @@ fun BmiScreen(
                     viewModel.updateHeight(newText)
                 },
                 isError = !isHeightValid,
-                label = { Text("Wzrost w cm") },
+                label = { Text("Wzrost w cm",color = Color.Black) },
+                textStyle = Typography.labelMedium,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isHeightValid) Color(0xFF4CAF50) else Color.Red,
@@ -195,7 +206,8 @@ fun BmiScreen(
                     viewModel.updateWeight(newText)
                 },
                 isError = !isWeightValid,
-                label = { Text("Waga w kg") },
+                label = { Text("Waga w kg",color = Color.Black) },
+                textStyle = Typography.labelMedium,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = if (isWeightValid) Color(0xFF4CAF50) else Color.Red,
@@ -231,7 +243,9 @@ fun BmiScreen(
                 shape = RoundedCornerShape(10.dp),
                 elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 10.dp)
             ) {
-                Text(text = "Oblicz BMI")
+                Text(text = "Oblicz BMI",
+                    style = Typography.labelMedium,
+                    color = Color.White)
             }
 
             if (showResultDialog) {
@@ -245,14 +259,16 @@ fun BmiScreen(
                             viewModel.bmiResult.value?.let { bmi ->
                                 Text(
                                     "Twoje BMI to ${"%.2f".format(bmi)}",
-                                    style = Typography.labelMedium
+                                    style = Typography.labelMedium,
+                                    color = Color.White
                                 )
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             viewModel.bmiCategory.value?.let { category ->
                                 Text(
                                     "Kategoria: $category",
-                                    style = Typography.labelMedium
+                                    style = Typography.labelMedium,
+                                    color = Color.White
                                 )
                             }
                         }

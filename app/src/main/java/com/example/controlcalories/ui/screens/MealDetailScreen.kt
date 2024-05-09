@@ -138,9 +138,3 @@ fun ProductEdit(
         }
     }
 }
-
-
-
-
-
-

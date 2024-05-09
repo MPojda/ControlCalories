@@ -24,6 +24,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,6 +52,7 @@ fun QuantityInputScreen(
         weightText.value.toFloatOrNull()?.let { it > 0 } ?: false
     }
     val currentMealId = viewModel.currentMealId.collectAsState().value
+    val selectedDate by viewModel.selectedDate.collectAsState()
 
     LaunchedEffect(weightText.value) {
         Log.d("Debug", "Weight text: ${weightText.value}")
@@ -115,6 +117,7 @@ fun QuantityInputScreen(
                                 weight = weightText.value.toFloat(),
                                 categoryId = selectedProduct.categoryId,
                                 mealId = currentMealId,
+                                selectedDate = selectedDate,
                                 onProductAdded = {
                                     navController.popBackStack()
                                     addingProduct.value = false
@@ -134,8 +137,3 @@ fun QuantityInputScreen(
         }
     }
 }
-
-
-
-
-

@@ -1,7 +1,9 @@
 package com.example.controlcalories.data.model.dto
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 @Entity(tableName = "meals")
 data class Meal(
@@ -33,6 +35,15 @@ data class TotalsForDay(
     val totalProtein: Double,
     val totalFat: Double,
     val totalCarbohydrates: Double
+)
+
+data class MealWithProducts(
+    @Embedded val meal: Meal,
+    @Relation(
+        parentColumn = "mealId",
+        entityColumn = "mealId"
+    )
+    val products: List<UserProduct>
 )
 
 

@@ -32,6 +32,7 @@ private val LightColorScheme = lightColorScheme(
     background = Color.White
 )
 
+
 @Composable
 fun ControlCaloriesTheme(
     content: @Composable () -> Unit

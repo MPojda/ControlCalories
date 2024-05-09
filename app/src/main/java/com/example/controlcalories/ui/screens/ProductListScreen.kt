@@ -31,6 +31,7 @@ fun ProductListScreen(
     navController: NavHostController
 ) {
     val products by viewModel.getProductsByCategory(categoryId).collectAsState(initial = listOf())
+    val selectedDate by viewModel.selectedDate.collectAsState()
 
     LazyColumn {
         items(products, key = { product -> product.id }) { product ->
