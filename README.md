@@ -1,3 +1,6 @@
+![image](https://github.com/MPojda/ControlCalories/assets/80914407/2b03d3d5-6d9a-4d1e-9d6f-6274c8efe3b7)
+
+
 # ControlCalories Android App
 
 ControlCalories is an Android application designed to help users track their daily calorie intake and promote healthier eating habits.
@@ -9,7 +12,6 @@ ControlCalories is an Android application designed to help users track their dai
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [Contact](#contact)
 
 ## Features
 
