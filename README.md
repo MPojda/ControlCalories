@@ -12,7 +12,6 @@ ControlCalories is an Android application designed to help users track their dai
 - [Technologies](#technologies)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
 
 ## Features
 
@@ -43,12 +42,4 @@ ControlCalories is an Android application designed to help users track their dai
 2. Log your meals and track your daily calorie intake.
 3. Monitor your dietary habits and adjust as needed for healthier living.
 
-## Contributing
-
-Contributions are welcome! Please follow these steps to contribute:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes and commit them (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Open a Pull Request.
+Or download App to your mobilephone from Amazon: https://www.amazon.com/gp/product/B0D3X2S8K2
