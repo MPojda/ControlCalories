@@ -1,4 +1,5 @@
-![image](https://github.com/MPojda/ControlCalories/assets/80914407/2b03d3d5-6d9a-4d1e-9d6f-6274c8efe3b7)
+![image](https://github.com/MPojda/ControlCalories/assets/80914407/0383ea22-9a4d-4788-98c3-5faf6e2179c3)
+
 
 
 # ControlCalories Android App
